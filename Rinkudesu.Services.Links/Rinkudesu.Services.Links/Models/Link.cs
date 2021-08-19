@@ -24,7 +24,7 @@ namespace Rinkudesu.Services.Links.Models
         [DataType(DataType.DateTime)]
         public DateTime LastUpdate { get; set; }
         [Required]
-        public string CreatingUserId { get; set; }
+        public string? CreatingUserId { get; set; }
 
         public Link()
         {
