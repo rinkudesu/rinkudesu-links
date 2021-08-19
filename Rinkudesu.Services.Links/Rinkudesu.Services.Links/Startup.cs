@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,18 @@ namespace Rinkudesu.Services.Links
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            if (InputArguments.Current.ApplyMigrations)
+            {
+                ApplyMigrations(app);
+            }
+        }
+
+        private static void ApplyMigrations(IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<LinkDbContext>();
+            context.Database.Migrate();
         }
     }
 }
