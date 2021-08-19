@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rinkudesu.Services.Links.Data;
+using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links
 {
@@ -18,6 +21,14 @@ namespace Rinkudesu.Services.Links
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<LinkDbContext>(options => {
+                options.UseNpgsql(
+                    EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader
+                        .DbContextVariableName), providerOptions => providerOptions.EnableRetryOnFailure());
+#if DEBUG
+                options.EnableSensitiveDataLogging();
+#endif
+            });
             services.AddControllers();
         }
 
