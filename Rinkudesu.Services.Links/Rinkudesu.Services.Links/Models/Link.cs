@@ -11,11 +11,11 @@ namespace Rinkudesu.Services.Links.Models
         public Guid Id { get; set; }
         [DataType(DataType.Url)]
         [Required]
-        public string? LinkUrl { get; set; }
+        public string LinkUrl { get; set; }
         [Required]
         [DataType(DataType.Text)]
         [MaxLength(250)]
-        public string? Title { get; set; }
+        public string Title { get; set; }
         [DataType(DataType.MultilineText)]
         public string? Description { get; set; }
         public LinkPrivacyOptions PrivacyOptions { get; set; }
@@ -24,12 +24,16 @@ namespace Rinkudesu.Services.Links.Models
         [DataType(DataType.DateTime)]
         public DateTime LastUpdate { get; set; }
         [Required]
-        public string? CreatingUserId { get; set; }
+        public string CreatingUserId { get; set; }
 
         public Link()
         {
             CreationDate = DateTime.Now;
             LastUpdate = CreationDate;
+            LinkUrl = string.Empty;
+            Title = string.Empty;
+            CreatingUserId = string.Empty;
+        }
         }
 
         public enum LinkPrivacyOptions
