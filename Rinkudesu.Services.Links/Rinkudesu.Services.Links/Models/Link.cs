@@ -34,6 +34,10 @@ namespace Rinkudesu.Services.Links.Models
             Title = string.Empty;
             CreatingUserId = string.Empty;
         }
+
+        public override string ToString()
+        {
+            return System.Text.Json.JsonSerializer.Serialize(this);
         }
 
         public enum LinkPrivacyOptions
