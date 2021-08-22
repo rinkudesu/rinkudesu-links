@@ -12,7 +12,7 @@ namespace Rinkudesu.Services.Links.Tests
 {
     public class LinkRepositoryTests : ContextTests
     {
-        private List<Link> links;
+        private List<Link> links = new List<Link>();
         private async Task PopulateLinksAsync()
         {
             links = new List<Link>
