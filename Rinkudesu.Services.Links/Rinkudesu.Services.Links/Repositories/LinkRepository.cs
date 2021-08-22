@@ -12,6 +12,7 @@ using Rinkudesu.Services.Links.Repositories.Exceptions;
 
 namespace Rinkudesu.Services.Links.Repositories
 {
+    //TODO: separate repositories to it's own dll?
     public class LinkRepository : ILinkRepository
     {
         private readonly LinkDbContext _context;
@@ -68,9 +69,9 @@ namespace Rinkudesu.Services.Links.Repositories
         public async Task UpdateLinkAsync(Link link, string updatingUserId, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(UpdateLinkAsync)} with link '{link}' by userId: '{updatingUserId}'");
-            var presentLink =
-                await _context.Links.FirstOrDefaultAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token);
-            if (presentLink is null)
+            var isLinkValid =
+                await _context.Links.AsNoTracking().AnyAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token);
+            if (!isLinkValid)
             {
                 _logger.LogInformation($"Link '{link}' was unable to be found for user '{updatingUserId}'");
                 throw new DataNotfoundException(link.Id);

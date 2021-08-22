@@ -10,5 +10,13 @@ namespace Rinkudesu.Services.Links.Data
         }
 
         public DbSet<Link> Links => Set<Link>();
+
+        public void ClearTracked()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                entry.State = EntityState.Detached;
+            }
+        }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Rinkudesu.Services.Links.Repositories.Exceptions
 {
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public class RepositoryException : Exception
     {
         public RepositoryException()

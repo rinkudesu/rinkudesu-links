@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rinkudesu.Services.Links.Repositories.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class DataAlreadyExistsException : RepositoryException
     {
         public DataAlreadyExistsException() : base("Data was not added to the database because it already exists")
