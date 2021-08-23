@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Rinkudesu.Services.Links.Models;
-using Rinkudesu.Services.Links.QueryModels;
+using Rinkudesu.Services.Links.Repositories.QueryModels;
 using Xunit;
 
 namespace Rinkudesu.Services.Links.Tests

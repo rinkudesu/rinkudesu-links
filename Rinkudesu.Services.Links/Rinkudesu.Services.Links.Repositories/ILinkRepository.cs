@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Rinkudesu.Services.Links.Models;
-using Rinkudesu.Services.Links.QueryModels;
+using Rinkudesu.Services.Links.Repositories.QueryModels;
 
 namespace Rinkudesu.Services.Links.Repositories
 {

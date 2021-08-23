@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Rinkudesu.Services.Links.Models;
-using Rinkudesu.Services.Links.QueryModels;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
+using Rinkudesu.Services.Links.Repositories.QueryModels;
 using Xunit;
 
 namespace Rinkudesu.Services.Links.Tests

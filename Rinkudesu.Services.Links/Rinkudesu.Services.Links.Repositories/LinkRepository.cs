@@ -7,12 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.Models;
-using Rinkudesu.Services.Links.QueryModels;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
+using Rinkudesu.Services.Links.Repositories.QueryModels;
 
 namespace Rinkudesu.Services.Links.Repositories
 {
-    //TODO: separate repositories to it's own dll?
     public class LinkRepository : ILinkRepository
     {
         private readonly LinkDbContext _context;

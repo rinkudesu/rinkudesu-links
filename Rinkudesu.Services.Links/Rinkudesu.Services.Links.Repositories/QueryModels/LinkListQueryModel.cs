@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Models;
 
-namespace Rinkudesu.Services.Links.QueryModels
+namespace Rinkudesu.Services.Links.Repositories.QueryModels
 {
     public class LinkListQueryModel
     {
