@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.QueryModels
@@ -35,7 +36,7 @@ namespace Rinkudesu.Services.Links.QueryModels
             }
         }
 
-        private IQueryable<Link> FilterUserId(IQueryable<Link> links)
+        public IQueryable<Link> FilterUserId(IQueryable<Link> links)
         {
             if (UserId != null)
             {
@@ -44,38 +45,39 @@ namespace Rinkudesu.Services.Links.QueryModels
             return links;
         }
 
-        private IQueryable<Link> FilterUrlContains(IQueryable<Link> links)
+        public IQueryable<Link> FilterUrlContains(IQueryable<Link> links)
         {
             if (UrlContains != null)
             {
-                return links.Where(l => l.LinkUrl.Contains(UrlContains));
+                //TODO: make sure this works with Postgres
+                return links.Where(l => l.LinkUrl.Contains(UrlContains, StringComparison.InvariantCultureIgnoreCase));
             }
             return links;
         }
 
-        private IQueryable<Link> FilterTitleContains(IQueryable<Link> links)
+        public IQueryable<Link> FilterTitleContains(IQueryable<Link> links)
         {
             if (TitleContains != null)
             {
-                return links.Where(l => l.Title.Contains(TitleContains));
+                return links.Where(l => l.Title.Contains(TitleContains, StringComparison.InvariantCultureIgnoreCase));
             }
             return links;
         }
 
-        private IQueryable<Link> FilterVisibility(IQueryable<Link> links)
+        public IQueryable<Link> FilterVisibility(IQueryable<Link> links)
         {
             if (!ShowPrivate)
             {
-                return links.Where(l => l.PrivacyOptions != Link.LinkPrivacyOptions.Private);
+                links = links.Where(l => l.PrivacyOptions != Link.LinkPrivacyOptions.Private);
             }
             if (!ShowPublic)
             {
-                return links.Where(l => l.PrivacyOptions != Link.LinkPrivacyOptions.Public);
+                links = links.Where(l => l.PrivacyOptions != Link.LinkPrivacyOptions.Public);
             }
             return links;
         }
 
-        private IQueryable<Link> SortLinks(IQueryable<Link> links) =>
+        public IQueryable<Link> SortLinks(IQueryable<Link> links) =>
             SortOptions switch
             {
                 LinkListSortOptions.Title => SortDescending
