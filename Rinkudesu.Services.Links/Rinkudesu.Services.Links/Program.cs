@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace Rinkudesu.Services.Links
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static int Main(string[] args)

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rinkudesu.Services.Links.Models
 {
+    [ExcludeFromCodeCoverage]
     public class Link
     {
         [Key]
