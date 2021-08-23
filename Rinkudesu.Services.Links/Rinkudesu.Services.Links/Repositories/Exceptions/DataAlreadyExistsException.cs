@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Rinkudesu.Services.Links.Repositories.Exceptions
 {
+    [Serializable]
     [ExcludeFromCodeCoverage]
     public class DataAlreadyExistsException : RepositoryException
     {
