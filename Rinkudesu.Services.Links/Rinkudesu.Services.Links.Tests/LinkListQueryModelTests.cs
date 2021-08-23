@@ -208,5 +208,171 @@ namespace Rinkudesu.Services.Links.Tests
             Assert.Equal(links.Count(l => l.PrivacyOptions == Link.LinkPrivacyOptions.Public), result.Count());
             Assert.DoesNotContain(result, l => l.PrivacyOptions == Link.LinkPrivacyOptions.Private);
         }
+
+        private List<Link> GetSortTestLinks()
+        {
+            return new List<Link>
+            {
+                new Link
+                {
+                    Title = "a", LinkUrl = "z", CreationDate = DateTime.Now.AddDays(-6),
+                    LastUpdate = DateTime.Now.AddDays(-10)
+                },
+                new Link
+                {
+                    Title = "e", LinkUrl = "a", CreationDate = DateTime.Now.AddDays(-3),
+                    LastUpdate = DateTime.Now.AddDays(-2)
+                },
+                new Link
+                {
+                    Title = "j", LinkUrl = "s", CreationDate = DateTime.Now.AddDays(-2),
+                    LastUpdate = DateTime.Now.AddDays(-4)
+                },
+                new Link
+                {
+                    Title = "b", LinkUrl = "i", CreationDate = DateTime.Now.AddDays(-4),
+                    LastUpdate = DateTime.Now.AddDays(-1)
+                },
+                new Link
+                {
+                    Title = "z", LinkUrl = "j", CreationDate = DateTime.Now.AddDays(-9), LastUpdate = DateTime.Now
+                },
+            };
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortAscByTitle_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.Title };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.Title).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortDescByTitle_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.Title, SortDescending = true };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderByDescending(l => l.Title).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortAscByUrl_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.Url };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.LinkUrl).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortDescByUrl_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.Url, SortDescending = true };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderByDescending(l => l.LinkUrl).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortAscByCreationDate_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.CreationDate };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.CreationDate).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortDescByCreationDate_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.CreationDate, SortDescending = true };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderByDescending(l => l.CreationDate).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortAscByUpdateDate_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.UpdateDate };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.LastUpdate).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortDescByUpdateDate_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = LinkListSortOptions.UpdateDate, SortDescending = true };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderByDescending(l => l.LastUpdate).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelSortLinks_SortByDefault_SortedCorrectly()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { SortOptions = (LinkListSortOptions)(-1) };
+
+            var result = model.SortLinks(testLinks.AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.Id).ToList();
+            for (int i = 0; i < testLinks.Count; i++)
+            {
+                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
     }
 }
