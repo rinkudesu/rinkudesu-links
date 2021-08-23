@@ -1,7 +1,9 @@
-﻿using CommandLine;
+﻿using System.Diagnostics.CodeAnalysis;
+using CommandLine;
 
 namespace Rinkudesu.Services.Links
 {
+    [ExcludeFromCodeCoverage]
     public class InputArguments
     {
         public static InputArguments Current { get; private set; } = null!; // the value is always set as the first operation of the program
