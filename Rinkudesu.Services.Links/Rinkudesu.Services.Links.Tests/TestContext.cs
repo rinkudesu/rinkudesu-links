@@ -12,10 +12,6 @@ namespace Rinkudesu.Services.Links.Tests
 
         public LinkDbContext DbContext => context;
 
-        private TestContext()
-        {
-        }
-
         private TestContext(LinkDbContext context, SqliteConnection connection)
         {
             this.connection = connection;
