@@ -14,7 +14,6 @@ namespace Rinkudesu.Services.Links.Tests
 
         private TestContext()
         {
-
         }
 
         private TestContext(LinkDbContext context, SqliteConnection connection)
