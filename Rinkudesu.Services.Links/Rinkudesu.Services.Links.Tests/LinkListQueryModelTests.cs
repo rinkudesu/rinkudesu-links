@@ -178,7 +178,7 @@ namespace Rinkudesu.Services.Links.Tests
         public void LinkListQueryModelFilterFilterVisibility_BothFalse_EmptyQueryable()
         {
             PopulateLinks();
-            var model = new LinkListQueryModel();
+            var model = new LinkListQueryModel { ShowPublic = false };
 
             var result = model.FilterVisibility(links.AsQueryable());
 
@@ -189,7 +189,7 @@ namespace Rinkudesu.Services.Links.Tests
         public void LinkListQueryModelFilterVisibility_ShowPrivate_OnlyPrivateReturned()
         {
             PopulateLinks();
-            var model = new LinkListQueryModel { ShowPrivate = true };
+            var model = new LinkListQueryModel { ShowPrivate = true, ShowPublic = false };
 
             var result = model.FilterVisibility(links.AsQueryable());
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.QueryModels
@@ -10,7 +11,7 @@ namespace Rinkudesu.Services.Links.QueryModels
         public string? UrlContains { get; set; }
         public string? TitleContains { get; set; }
         public bool ShowPrivate { get; set; }
-        public bool ShowPublic { get; set; }
+        public bool ShowPublic { get; set; } = true;
         public bool SortDescending { get; set; }
         public LinkListSortOptions SortOptions { get; set; }
 
@@ -49,8 +50,7 @@ namespace Rinkudesu.Services.Links.QueryModels
         {
             if (UrlContains != null)
             {
-                //TODO: make sure this works with Postgres
-                return links.Where(l => l.LinkUrl.Contains(UrlContains, StringComparison.InvariantCultureIgnoreCase));
+                return links.Where(l => EF.Functions.ILike(l.LinkUrl, $"%{UrlContains}%"));
             }
             return links;
         }
@@ -59,7 +59,7 @@ namespace Rinkudesu.Services.Links.QueryModels
         {
             if (TitleContains != null)
             {
-                return links.Where(l => l.Title.Contains(TitleContains, StringComparison.InvariantCultureIgnoreCase));
+                return links.Where(l => EF.Functions.ILike(l.Title, $"%{TitleContains}%"));
             }
             return links;
         }
