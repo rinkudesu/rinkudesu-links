@@ -42,7 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: bash
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"rinkudesu_rinkudesu-links" /o:"rinkudesu" /d:sonar.cs.vscoveragexml.reportsPaths="./Rinkudesu.Services.Links.Tests/coverage.json" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"rinkudesu_rinkudesu-links" /o:"rinkudesu" /d:sonar.cs.vscoveragexml.reportsPaths="**/Rinkudesu.Services.Links.Tests/coverage.json" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Rinkudesu.Services.Links -c Release
           dotnet test ./Rinkudesu.Services.Links -c Release /p:CollectCoverage=true
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
