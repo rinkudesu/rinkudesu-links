@@ -351,3 +351,4 @@ MigrationBackup/
 
 Rinkudesu.Services.Links/.idea/.idea.Rinkudesu.Services.Links/.idea/dataSources.xml
 Rinkudesu.Services.Links/Rinkudesu.Services.Links.Tests/coverage.json
+Rinkudesu.Services.Links/Rinkudesu.Services.Links.Tests/coverage.opencover.xml
