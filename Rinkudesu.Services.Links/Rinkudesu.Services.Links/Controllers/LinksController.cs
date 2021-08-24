@@ -12,7 +12,6 @@ using Rinkudesu.Services.Links.Repositories.QueryModels;
 
 namespace Rinkudesu.Services.Links.Controllers
 {
-    //TODO: documentation
     [ApiController]
     [Route("api/[controller]")]
     public class LinksController : ControllerBase
@@ -26,6 +25,11 @@ namespace Rinkudesu.Services.Links.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Gets a complete list of available links to which the user has access
+        /// </summary>
+        /// <param name="queryModel"></param>
+        /// <returns>List of links</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel)
@@ -34,6 +38,12 @@ namespace Rinkudesu.Services.Links.Controllers
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }
 
+        /// <summary>
+        /// Finds a single link and returns its details
+        /// </summary>
+        /// <param name="linkId">ID of a link to find</param>
+        /// <returns>Found link</returns>
+        /// <response code="404">When no link was found with matching ID</response>
         [HttpGet("{linkId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,6 +61,14 @@ namespace Rinkudesu.Services.Links.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a single new link
+        /// </summary>
+        /// <param name="newLink"></param>
+        /// <remarks>Note that id, creating user id, creation date and update date fields will be ignored, even if they are included in the request</remarks>
+        /// <returns>Newly created link object</returns>
+        /// <response code="400">When object validation failed or the object already exists in the database</response>
+        /// <response code="201">When the object was created correctly</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -74,6 +92,13 @@ namespace Rinkudesu.Services.Links.Controllers
             }
         }
 
+        /// <summary>
+        /// Modifies a single link with matching id
+        /// </summary>
+        /// <param name="linkId">ID of a link to update</param>
+        /// <param name="updatedLink"></param>
+        /// <remarks>Note that id, creating user id, creation date and update date fields will be ignored, even if they are included in the request</remarks>
+        /// <returns></returns>
         [HttpPost("{linkId:guid}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -98,6 +123,11 @@ namespace Rinkudesu.Services.Links.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a single link with matching id
+        /// </summary>
+        /// <param name="linkId">ID of a link to remove</param>
+        /// <returns></returns>
         [HttpDelete("{linkId:guid}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]

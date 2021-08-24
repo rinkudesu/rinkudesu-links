@@ -6,12 +6,33 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
 {
     public class LinkListQueryModel
     {
+        /// <summary>
+        /// UserId creating the link
+        /// </summary>
         public string? UserId { get; set; }
+        /// <summary>
+        /// String that has to be contained in Url
+        /// </summary>
         public string? UrlContains { get; set; }
+        /// <summary>
+        /// String that has to be contained in the title
+        /// </summary>
         public string? TitleContains { get; set; }
+        /// <summary>
+        /// Shows private links
+        /// </summary>
         public bool ShowPrivate { get; set; }
+        /// <summary>
+        /// Shows public links
+        /// </summary>
         public bool ShowPublic { get; set; } = true;
+        /// <summary>
+        /// Sorts the list in a descending order
+        /// </summary>
         public bool SortDescending { get; set; }
+        /// <summary>
+        /// Selects the sort order for the list
+        /// </summary>
         public LinkListSortOptions SortOptions { get; set; }
 
         public IQueryable<Link> ApplyQueryModel(IQueryable<Link> links)
