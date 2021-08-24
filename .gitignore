@@ -352,3 +352,5 @@ MigrationBackup/
 Rinkudesu.Services.Links/.idea/.idea.Rinkudesu.Services.Links/.idea/dataSources.xml
 Rinkudesu.Services.Links/Rinkudesu.Services.Links.Tests/coverage.json
 Rinkudesu.Services.Links/Rinkudesu.Services.Links.Tests/coverage.opencover.xml
+Rinkudesu.Services.Links/.idea/sonarlint/issuestore
+Rinkudesu.Services.Links/.idea/.idea.Rinkudesu.Services.Links/.idea/sonarlint-state.xml
