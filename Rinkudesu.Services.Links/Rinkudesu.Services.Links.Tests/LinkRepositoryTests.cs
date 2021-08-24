@@ -80,7 +80,7 @@ namespace Rinkudesu.Services.Links.Tests
             var repo = CreateRepository();
             var requestGuid = links.First(l => l.CreatingUserId == "a").Id;
 
-            await Assert.ThrowsAsync<DataNotfoundException>(() => repo.GetLinkAsync(requestGuid, userId));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.GetLinkAsync(requestGuid, userId));
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Rinkudesu.Services.Links.Tests
             link.Description = "test";
             _context.ClearTracked();
 
-            await Assert.ThrowsAsync<DataNotfoundException>(() => repo.UpdateLinkAsync(link, "b"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, "b"));
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.Null(dbLink.Description);
@@ -148,7 +148,7 @@ namespace Rinkudesu.Services.Links.Tests
             var repo = CreateRepository();
             var link = new Link { CreatingUserId = "a" };
 
-            await Assert.ThrowsAsync<DataNotfoundException>(() => repo.UpdateLinkAsync(link, "a"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, "a"));
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace Rinkudesu.Services.Links.Tests
             link.Description = "test";
             _context.ClearTracked();
 
-            await Assert.ThrowsAsync<DataNotfoundException>(() => repo.DeleteLinkAsync(link.Id, "b"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, "b"));
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.NotNull(dbLink);
@@ -187,7 +187,7 @@ namespace Rinkudesu.Services.Links.Tests
             var repo = CreateRepository();
             var link = new Link { CreatingUserId = "a" };
 
-            await Assert.ThrowsAsync<DataNotfoundException>(() => repo.DeleteLinkAsync(link.Id, "a"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, "a"));
         }
     }
 }

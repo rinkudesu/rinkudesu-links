@@ -41,7 +41,7 @@ namespace Rinkudesu.Services.Links.Repositories
             catch (InvalidOperationException)
             {
                 _logger.LogInformation($"Link requested was not found in the database");
-                throw new DataNotfoundException(linkId);
+                throw new DataNotFoundException(linkId);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Rinkudesu.Services.Links.Repositories
             if (oldLink is null)
             {
                 _logger.LogInformation($"Link '{link.Id}' was unable to be found for user '{updatingUserId}'");
-                throw new DataNotfoundException(link.Id);
+                throw new DataNotFoundException(link.Id);
             }
             oldLink.Update(link);
             _context.Links.Update(oldLink);
@@ -89,7 +89,7 @@ namespace Rinkudesu.Services.Links.Repositories
             if (link is null)
             {
                 _logger.LogInformation($"Link '{linkId}' was unable to be found for user '{deletingUserId}'");
-                throw new DataNotfoundException(linkId);
+                throw new DataNotFoundException(linkId);
             }
             _context.Links.Remove(link);
             await _context.SaveChangesAsync(token);

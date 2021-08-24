@@ -45,7 +45,7 @@ namespace Rinkudesu.Services.Links.Controllers
                 var link = await _repository.GetLinkAsync(linkId);
                 return Ok(_mapper.Map<LinkDto>(link));
             }
-            catch (DataNotfoundException)
+            catch (DataNotFoundException)
             {
                 return NotFound();
             }
@@ -92,7 +92,7 @@ namespace Rinkudesu.Services.Links.Controllers
                 await _repository.UpdateLinkAsync(link, "CHANGEME");
                 return Ok();
             }
-            catch (DataNotfoundException)
+            catch (DataNotFoundException)
             {
                 return NotFound();
             }
@@ -109,7 +109,7 @@ namespace Rinkudesu.Services.Links.Controllers
                 await _repository.DeleteLinkAsync(linkId, "CHANGEME");
                 return Ok();
             }
-            catch (DataNotfoundException)
+            catch (DataNotFoundException)
             {
                 return NotFound();
             }
