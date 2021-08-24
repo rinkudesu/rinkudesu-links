@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.DataTransferObjects
 {
+    [ExcludeFromCodeCoverage]
     public class LinkDto
     {
         public Guid Id { get; set; }

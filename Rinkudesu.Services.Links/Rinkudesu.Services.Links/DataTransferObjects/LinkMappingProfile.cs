@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.DataTransferObjects
 {
+    [ExcludeFromCodeCoverage]
     public class LinkMappingProfile : Profile
     {
         public LinkMappingProfile()
