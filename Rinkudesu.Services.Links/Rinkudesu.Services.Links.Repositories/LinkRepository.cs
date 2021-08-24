@@ -41,13 +41,14 @@ namespace Rinkudesu.Services.Links.Repositories
             catch (InvalidOperationException)
             {
                 _logger.LogInformation($"Link requested was not found in the database");
-                throw new DataNotfoundException(linkId);
+                throw new DataNotFoundException(linkId);
             }
         }
 
         public async Task CreateLinkAsync(Link link, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(CreateLinkAsync)} with link: '{link}'");
+            link.SetCreateDates();
             _context.Links.Add(link);
             try
             {
@@ -68,14 +69,15 @@ namespace Rinkudesu.Services.Links.Repositories
         public async Task UpdateLinkAsync(Link link, string updatingUserId, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(UpdateLinkAsync)} with link '{link}' by userId: '{updatingUserId}'");
-            var isLinkValid =
-                await _context.Links.AsNoTracking().AnyAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token);
-            if (!isLinkValid)
+            var oldLink =
+                await _context.Links.FirstOrDefaultAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token);
+            if (oldLink is null)
             {
-                _logger.LogInformation($"Link '{link}' was unable to be found for user '{updatingUserId}'");
-                throw new DataNotfoundException(link.Id);
+                _logger.LogInformation($"Link '{link.Id}' was unable to be found for user '{updatingUserId}'");
+                throw new DataNotFoundException(link.Id);
             }
-            _context.Links.Update(link);
+            oldLink.Update(link);
+            _context.Links.Update(oldLink);
             await _context.SaveChangesAsync(token);
         }
 
@@ -86,8 +88,8 @@ namespace Rinkudesu.Services.Links.Repositories
                 l.Id == linkId && l.CreatingUserId == deletingUserId, token);
             if (link is null)
             {
-                _logger.LogInformation($"Link '{link}' was unable to be found for user '{deletingUserId}'");
-                throw new DataNotfoundException(linkId);
+                _logger.LogInformation($"Link '{linkId}' was unable to be found for user '{deletingUserId}'");
+                throw new DataNotFoundException(linkId);
             }
             _context.Links.Remove(link);
             await _context.SaveChangesAsync(token);

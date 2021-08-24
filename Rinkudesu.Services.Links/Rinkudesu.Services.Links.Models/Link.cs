@@ -25,7 +25,6 @@ namespace Rinkudesu.Services.Links.Models
         public DateTime CreationDate { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime LastUpdate { get; set; }
-        [Required]
         public string CreatingUserId { get; set; }
 
         public Link()
@@ -35,6 +34,28 @@ namespace Rinkudesu.Services.Links.Models
             LinkUrl = string.Empty;
             Title = string.Empty;
             CreatingUserId = string.Empty;
+        }
+
+        public void SetCreateDates(DateTime? creationTime = null)
+        {
+            creationTime ??= DateTime.Now;
+            CreationDate = creationTime.Value;
+            SetUpdateDate(creationTime.Value);
+        }
+
+        public void SetUpdateDate(DateTime? updateTime = null)
+        {
+            updateTime ??= DateTime.Now;
+            LastUpdate = updateTime.Value;
+        }
+
+        public void Update(Link newLink)
+        {
+            LinkUrl = newLink.LinkUrl;
+            Title = newLink.Title;
+            Description = newLink.Description;
+            PrivacyOptions = newLink.PrivacyOptions;
+            SetUpdateDate();
         }
 
         public override string ToString()

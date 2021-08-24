@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,11 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rinkudesu.Services.Links.Data;
+using Rinkudesu.Services.Links.DataTransferObjects;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -23,11 +26,15 @@ namespace Rinkudesu.Services.Links
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ILinkRepository, LinkRepository>();
+            services.AddAutoMapper(typeof(LinkMappingProfile));
 
             services.AddDbContext<LinkDbContext>(options => {
                 options.UseNpgsql(
                     EnvironmentalVariablesReader.GetRequiredVariable(EnvironmentalVariablesReader
-                        .DbContextVariableName), providerOptions => providerOptions.EnableRetryOnFailure());
+                        .DbContextVariableName), providerOptions => {
+                        providerOptions.EnableRetryOnFailure();
+                        providerOptions.MigrationsAssembly("Rinkudesu.Services.Links");
+                    });
 #if DEBUG
                 options.EnableSensitiveDataLogging();
 #endif

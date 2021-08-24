@@ -13,21 +13,21 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="CommandLineParser" Version="2.8.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.18">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.18" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.18" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.18">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Rinkudesu.Services.Links.Models\Rinkudesu.Services.Links.Models.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Repositories\Rinkudesu.Services.Links.Repositories.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Utilities\Rinkudesu.Services.Links.Utilities.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Data" />
     </ItemGroup>
 
 

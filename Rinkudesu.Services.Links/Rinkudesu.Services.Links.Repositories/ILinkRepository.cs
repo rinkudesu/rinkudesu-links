@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
+using Rinkudesu.Services.Links.Repositories.Exceptions;
 
 namespace Rinkudesu.Services.Links.Repositories
 {
@@ -27,6 +28,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="gettingUserId">ID of the user requesting the link, or null if anonymous</param>
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Link requested</returns>
+        /// <exception cref="DataNotFoundException">Thrown when no link exists with given <param name="linkId"></param></exception>
         Task<Link> GetLinkAsync(Guid linkId, string? gettingUserId = null, CancellationToken token = default);
         /// <summary>
         /// Creates the new link as provided
@@ -34,6 +36,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="link">New link to create</param>
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable task</returns>
+        /// <exception cref="DataAlreadyExistsException">Thrown when a duplicate primary key has been detected</exception>
         Task CreateLinkAsync(Link link, CancellationToken token = default);
         /// <summary>
         /// Updates the link matching the Id of an object in the argument
@@ -42,6 +45,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="updatingUserId">User requesting the change</param>
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable task</returns>
+        /// <exception cref="DataNotFoundException">Thrown when no link with the same key exists</exception>
         Task UpdateLinkAsync(Link link, string updatingUserId, CancellationToken token = default);
 
         /// <summary>
@@ -51,6 +55,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="deletingUserId">User requesting deletion</param>
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable task</returns>
+        /// <exception cref="DataNotFoundException">Thrown when no link exists with ID equal to <param name="linkId"></param></exception>
         Task DeleteLinkAsync(Guid linkId, string deletingUserId, CancellationToken token = default);
     }
 }
