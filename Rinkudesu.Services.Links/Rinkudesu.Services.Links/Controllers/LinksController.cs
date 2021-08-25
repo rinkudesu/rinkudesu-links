@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Rinkudesu.Services.Links.DataTransferObjects;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
@@ -20,11 +21,13 @@ namespace Rinkudesu.Services.Links.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ILinkRepository _repository;
+        private readonly ILogger _logger;
 
-        public LinksController(ILinkRepository repository, IMapper mapper)
+        public LinksController(ILinkRepository repository, IMapper mapper, ILogger<LinksController> logger)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -36,6 +39,7 @@ namespace Rinkudesu.Services.Links.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel)
         {
+            using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
             var links = await _repository.GetAllLinksAsync(queryModel);
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }
@@ -51,6 +55,7 @@ namespace Rinkudesu.Services.Links.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LinkDto>> GetSingle(Guid linkId)
         {
+            using var scope = _logger.BeginScope("Requesting a link with id {linkId}", linkId);
             //TODO: read user id once it's available
             try
             {
@@ -76,6 +81,7 @@ namespace Rinkudesu.Services.Links.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<LinkDto>> Create([FromBody] LinkDto newLink)
         {
+            using var scope = _logger.BeginScope("Creating a link {link}", newLink);
             var link = _mapper.Map<Link>(newLink);
             //TODO: read user id once it's available
             link.CreatingUserId = "CHANGEME";
@@ -107,6 +113,8 @@ namespace Rinkudesu.Services.Links.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Update(Guid linkId, [FromBody] LinkDto updatedLink)
         {
+            using var scope =
+                _logger.BeginScope("Updating a link with id {linkId} with {newLink}", linkId, updatedLink);
             var link = _mapper.Map<Link>(updatedLink);
             link.Id = linkId;
             //TODO: read user id once it's available
@@ -135,6 +143,7 @@ namespace Rinkudesu.Services.Links.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Delete(Guid linkId)
         {
+            using var scope = _logger.BeginScope("Deleting link {linkId}", linkId);
             //TODO: read user id
             try
             {
