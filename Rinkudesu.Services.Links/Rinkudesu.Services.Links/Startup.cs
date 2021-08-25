@@ -9,6 +9,7 @@ using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.DataTransferObjects;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Utilities;
+using Serilog;
 
 namespace Rinkudesu.Services.Links
 {
@@ -51,6 +52,8 @@ namespace Rinkudesu.Services.Links
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
