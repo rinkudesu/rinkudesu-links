@@ -1,13 +1,7 @@
-﻿FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+﻿FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
-COPY ["Rinkudesu.Services.Links/Rinkudesu.Services.Links.csproj", "Rinkudesu.Services.Links/"]
-RUN dotnet restore "Rinkudesu.Services.Links/Rinkudesu.Services.Links.csproj"
 COPY . .
+RUN dotnet restore "Rinkudesu.Services.Links/Rinkudesu.Services.Links.csproj"
 WORKDIR "/src/Rinkudesu.Services.Links"
 RUN dotnet build "Rinkudesu.Services.Links.csproj" -c Release -o /app/build
 
