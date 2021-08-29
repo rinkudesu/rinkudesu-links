@@ -12,6 +12,16 @@
         <Company>Rinkudesu</Company>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\Rinkudesu.Services.Links.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugSymbols>false</DebugSymbols>
+      <DebugType>none</DebugType>
+      <DocumentationFile>bin\Release\Rinkudesu.Services.Links.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="CommandLineParser" Version="2.8.0" />
@@ -25,6 +35,9 @@
       <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.5" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.5" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.5" />
     </ItemGroup>
 
     <ItemGroup>

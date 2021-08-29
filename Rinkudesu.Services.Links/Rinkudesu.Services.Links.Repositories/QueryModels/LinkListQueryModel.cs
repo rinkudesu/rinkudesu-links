@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Models;
 
