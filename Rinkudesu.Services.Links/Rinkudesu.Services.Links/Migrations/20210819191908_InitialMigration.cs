@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#pragma warning disable CS1591
+
 namespace Rinkudesu.Services.Links.Migrations
 {
     public partial class InitialMigration : Migration

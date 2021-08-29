@@ -14,6 +14,9 @@ using Rinkudesu.Services.Links.Repositories.QueryModels;
 
 namespace Rinkudesu.Services.Links.Controllers
 {
+    /// <summary>
+    /// Links controller responsible for basic management of <see cref="Link"/> objects
+    /// </summary>
     [ExcludeFromCodeCoverage]
     [ApiController]
     [Route("api/[controller]")]
@@ -23,7 +26,9 @@ namespace Rinkudesu.Services.Links.Controllers
         private readonly ILinkRepository _repository;
         private readonly ILogger _logger;
 
+#pragma warning disable 1591
         public LinksController(ILinkRepository repository, IMapper mapper, ILogger<LinksController> logger)
+#pragma warning restore 1591
         {
             _mapper = mapper;
             _repository = repository;
