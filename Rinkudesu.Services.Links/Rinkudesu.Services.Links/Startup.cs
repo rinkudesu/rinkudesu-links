@@ -15,6 +15,7 @@ using Rinkudesu.Services.Links.DataTransferObjects;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Utilities;
 using Serilog;
+#pragma warning disable 1591
 
 namespace Rinkudesu.Services.Links
 {

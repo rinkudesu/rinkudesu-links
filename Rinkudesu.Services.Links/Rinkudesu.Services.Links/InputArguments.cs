@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Serilog;
+#pragma warning disable 1591
 
 namespace Rinkudesu.Services.Links
 {

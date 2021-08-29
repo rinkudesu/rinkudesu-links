@@ -20,6 +20,7 @@
       <DebugSymbols>false</DebugSymbols>
       <DebugType>none</DebugType>
       <DocumentationFile>bin\Release\Rinkudesu.Services.Links.xml</DocumentationFile>
+      <NoWarn>1701;1702;1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

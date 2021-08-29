@@ -4,6 +4,9 @@ using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.DataTransferObjects
 {
+    /// <summary>
+    /// Data transfer object to send and receive <see cref="Link"/> objects
+    /// </summary>
     [ExcludeFromCodeCoverage]
     public class LinkDto
     {

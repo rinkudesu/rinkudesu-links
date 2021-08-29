@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Rinkudesu.Services.Links.Data;
 
+#pragma warning disable CS1591
+
 namespace Rinkudesu.Services.Links.Migrations
 {
     [DbContext(typeof(LinkDbContext))]

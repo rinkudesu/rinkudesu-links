@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+#pragma warning disable 1591
 
 namespace Rinkudesu.Services.Links
 {
