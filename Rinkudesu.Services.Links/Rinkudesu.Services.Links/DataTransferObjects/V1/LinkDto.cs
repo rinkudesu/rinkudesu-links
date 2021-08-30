@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Rinkudesu.Services.Links.Models;
 
-namespace Rinkudesu.Services.Links.DataTransferObjects
+namespace Rinkudesu.Services.Links.DataTransferObjects.V1
 {
     /// <summary>
     /// Data transfer object to send and receive <see cref="Link"/> objects
