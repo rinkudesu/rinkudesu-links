@@ -20,6 +20,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
     [ExcludeFromCodeCoverage]
     [ApiController]
     [ApiVersion("1")]
+    [Route("api/[controller]")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class LinksController : ControllerBase
     {

@@ -52,7 +52,7 @@ namespace Rinkudesu.Services.Links
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddApiVersioning(o => {
-                o.AssumeDefaultVersionWhenUnspecified = false;
+                o.AssumeDefaultVersionWhenUnspecified = true;
                 o.DefaultApiVersion = new ApiVersion(1, 0);
                 o.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
