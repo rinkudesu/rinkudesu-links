@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
+using Rinkudesu.Services.Links.DataTransferObjects.V1;
 using Rinkudesu.Services.Links.Models;
 #pragma warning disable 1591
 

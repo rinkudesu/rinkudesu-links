@@ -6,20 +6,21 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Rinkudesu.Services.Links.DataTransferObjects;
+using Rinkudesu.Services.Links.DataTransferObjects.V1;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
 
-namespace Rinkudesu.Services.Links.Controllers
+namespace Rinkudesu.Services.Links.Controllers.V1
 {
     /// <summary>
     /// Links controller responsible for basic management of <see cref="Link"/> objects
     /// </summary>
     [ExcludeFromCodeCoverage]
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class LinksController : ControllerBase
     {
         private readonly IMapper _mapper;

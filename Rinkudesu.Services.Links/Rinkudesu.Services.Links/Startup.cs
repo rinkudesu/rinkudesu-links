@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +50,13 @@ namespace Rinkudesu.Services.Links
             });
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddApiVersioning(o => {
+                o.AssumeDefaultVersionWhenUnspecified = false;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.ApiVersionReader = new UrlSegmentApiVersionReader();
+            });
+
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
