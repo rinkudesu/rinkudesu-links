@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -188,6 +189,36 @@ namespace Rinkudesu.Services.Links.Tests
             var link = new Link { CreatingUserId = "a" };
 
             await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, "a"));
+        }
+
+        [Fact]
+        public async Task CreateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
+        {
+            var repo = CreateRepository();
+            var link = new Link { CreationDate = DateTime.MinValue, LastUpdate = DateTime.MaxValue };
+
+            await repo.CreateLinkAsync(link);
+
+            var dbLink = _context.Links.First();
+            Assert.NotEqual(DateTime.MinValue, dbLink.CreationDate);
+            Assert.NotEqual(DateTime.MaxValue, dbLink.LastUpdate);
+        }
+
+        [Fact]
+        public async Task UpdateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
+        {
+            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = "aaa"});
+            await _context.SaveChangesAsync();
+            var id = _context.Links.First().Id;
+            _context.ClearTracked();
+            var repo = CreateRepository();
+            var link = new Link { Id = id, CreationDate = DateTime.MaxValue, LastUpdate = DateTime.MinValue };
+
+            await repo.UpdateLinkAsync(link, "aaa");
+
+            var updated = _context.Links.First();
+            Assert.Equal(DateTime.MinValue, updated.CreationDate);
+            Assert.NotEqual(DateTime.MaxValue, updated.LastUpdate);
         }
     }
 }
