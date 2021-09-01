@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using CommandLine;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -64,6 +66,14 @@ namespace Rinkudesu.Services.Links
                         .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName)
                         .Enrich.WithExceptionDetails();
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel((context, serverOptions) => {
+                        serverOptions.ConfigureHttpsDefaults(https => {
+                            https.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
+                            https.ServerCertificate = new X509Certificate2("cert.pfx");
+                        });
+                    });
+                });
     }
 }
