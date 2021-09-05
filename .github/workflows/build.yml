@@ -6,8 +6,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build
+  build-for-sonar:
+    name: Build and test with Sonar
     runs-on: ubuntu-latest
     steps:
       - name: Set up JDK 11
