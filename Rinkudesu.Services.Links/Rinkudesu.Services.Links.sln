@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Services.Links.Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Services.Links.Data", "Rinkudesu.Services.Links.Data\Rinkudesu.Services.Links.Data.csproj", "{26A791B3-4BAA-4F25-8AE7-AAF90BEC4594}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rinkudesu.Services.Links.HealthChecks", "Rinkudesu.Services.Links.HealthChecks\Rinkudesu.Services.Links.HealthChecks.csproj", "{E43C4BCB-2BB1-4602-A5BC-AB7216F679E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{26A791B3-4BAA-4F25-8AE7-AAF90BEC4594}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26A791B3-4BAA-4F25-8AE7-AAF90BEC4594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26A791B3-4BAA-4F25-8AE7-AAF90BEC4594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E43C4BCB-2BB1-4602-A5BC-AB7216F679E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E43C4BCB-2BB1-4602-A5BC-AB7216F679E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E43C4BCB-2BB1-4602-A5BC-AB7216F679E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E43C4BCB-2BB1-4602-A5BC-AB7216F679E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
