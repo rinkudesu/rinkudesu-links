@@ -12,4 +12,5 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
 EXPOSE 80
 WORKDIR /app
 COPY --from=publish /app/publish .
+HEALTHCHECK --interval=20s --start-period=5s --retries=3 CMD curl --fail http://localhost/health || exit 1
 ENTRYPOINT ["dotnet", "Rinkudesu.Services.Links.dll"]
