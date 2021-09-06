@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.DataTransferObjects;
+using Rinkudesu.Services.Links.HealthChecks;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Utilities;
 using Serilog;
@@ -68,6 +69,8 @@ namespace Rinkudesu.Services.Links
                 var xmlPath = AppContext.BaseDirectory;
                 c.IncludeXmlComments(Path.Combine(xmlPath, xmlName));
             });
+
+            services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("Database health check");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,7 +94,10 @@ namespace Rinkudesu.Services.Links
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
+            });
 
             if (InputArguments.Current.ApplyMigrations)
             {
