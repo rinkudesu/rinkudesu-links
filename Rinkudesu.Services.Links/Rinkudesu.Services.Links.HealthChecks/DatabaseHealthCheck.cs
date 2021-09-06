@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Rinkudesu.Services.Links.Data;
 
 namespace Rinkudesu.Services.Links.HealthChecks
 {
+    [ExcludeFromCodeCoverage]
     public class DatabaseHealthCheck : IHealthCheck
     {
         private readonly LinkDbContext _context;
