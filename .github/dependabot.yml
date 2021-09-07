@@ -16,7 +16,11 @@ updates:
       versions: ["5.*", "6.*"]
     - dependency-name: Microsoft.EntityFrameworkCore
       versions: ["5.*", "6.*"]
+    - dependency-name: Microsoft.EntityFrameworkCore.Relational
+      versions: ["5.*", "6.*"]
     - dependency-name: Npgsql.EntityFrameworkCore.PostgreSQL
+      versions: ["5.*", "6.*"]
+    - dependency-name: Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions
       versions: ["5.*", "6.*"]
     - dependency-name: Microsoft.VisualStudio.Web.CodeGeneration.Design
       versions: ["5.*", "6.*"]
