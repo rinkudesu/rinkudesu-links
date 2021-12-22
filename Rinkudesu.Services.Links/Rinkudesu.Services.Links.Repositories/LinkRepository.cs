@@ -26,7 +26,7 @@ namespace Rinkudesu.Services.Links.Repositories
         public async Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(GetAllLinksAsync)} with query model: {queryModel}");
-            return await queryModel.ApplyQueryModel(_context.Links).ToListAsync(token);
+            return await queryModel.ApplyQueryModel(_context.Links).ToListAsync(token).ConfigureAwait(false);
         }
 
         public async Task<Link> GetLinkAsync(Guid linkId, string? gettingUserId = null, CancellationToken token = default)
@@ -36,7 +36,7 @@ namespace Rinkudesu.Services.Links.Repositories
             {
                 return await _context.Links.FirstAsync(l =>
                     l.Id == linkId && (l.CreatingUserId == gettingUserId ||
-                                       l.PrivacyOptions == Link.LinkPrivacyOptions.Public), token);
+                                       l.PrivacyOptions == Link.LinkPrivacyOptions.Public), token).ConfigureAwait(false);
             }
             catch (InvalidOperationException)
             {
@@ -52,7 +52,7 @@ namespace Rinkudesu.Services.Links.Repositories
             _context.Links.Add(link);
             try
             {
-                await _context.SaveChangesAsync(token);
+                await _context.SaveChangesAsync(token).ConfigureAwait(false);
             }
             catch (DbUpdateException e)
             {
@@ -70,7 +70,7 @@ namespace Rinkudesu.Services.Links.Repositories
         {
             _logger.LogDebug($"Executing {nameof(UpdateLinkAsync)} with link '{link}' by userId: '{updatingUserId}'");
             var oldLink =
-                await _context.Links.FirstOrDefaultAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token);
+                await _context.Links.FirstOrDefaultAsync(l => l.Id == link.Id && l.CreatingUserId == updatingUserId, token).ConfigureAwait(false);
             if (oldLink is null)
             {
                 _logger.LogInformation($"Link '{link.Id}' was unable to be found for user '{updatingUserId}'");
@@ -78,21 +78,21 @@ namespace Rinkudesu.Services.Links.Repositories
             }
             oldLink.Update(link);
             _context.Links.Update(oldLink);
-            await _context.SaveChangesAsync(token);
+            await _context.SaveChangesAsync(token).ConfigureAwait(false);
         }
 
         public async Task DeleteLinkAsync(Guid linkId, string deletingUserId, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(DeleteLinkAsync)} with link id '{linkId}' by user '{deletingUserId}'");
             var link = await _context.Links.FirstOrDefaultAsync(l =>
-                l.Id == linkId && l.CreatingUserId == deletingUserId, token);
+                l.Id == linkId && l.CreatingUserId == deletingUserId, token).ConfigureAwait(false);
             if (link is null)
             {
                 _logger.LogInformation($"Link '{linkId}' was unable to be found for user '{deletingUserId}'");
                 throw new DataNotFoundException(linkId);
             }
             _context.Links.Remove(link);
-            await _context.SaveChangesAsync(token);
+            await _context.SaveChangesAsync(token).ConfigureAwait(false);
         }
     }
 }

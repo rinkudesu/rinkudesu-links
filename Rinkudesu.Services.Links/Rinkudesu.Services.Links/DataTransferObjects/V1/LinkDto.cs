@@ -17,7 +17,7 @@ namespace Rinkudesu.Services.Links.DataTransferObjects.V1
         /// <summary>
         /// URL the link is pointing to
         /// </summary>
-        public string LinkUrl { get; set; } = string.Empty;
+        public Uri? LinkUrl { get; set; }
         /// <summary>
         /// Title of the link
         /// </summary>

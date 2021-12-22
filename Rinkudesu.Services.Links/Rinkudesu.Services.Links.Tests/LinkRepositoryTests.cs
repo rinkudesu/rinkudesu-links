@@ -124,7 +124,7 @@ namespace Rinkudesu.Services.Links.Tests
             await repo.UpdateLinkAsync(updatedLink, "a");
 
             var dbLink = await _context.Links.FindAsync(link.Id);
-            Assert.Equal(updatedLink.Description, dbLink.Description);
+            Assert.Equal(updatedLink.Description, dbLink?.Description);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace Rinkudesu.Services.Links.Tests
             await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, "b"));
 
             var dbLink = await _context.Links.FindAsync(link.Id);
-            Assert.Null(dbLink.Description);
+            Assert.Null(dbLink?.Description);
         }
 
         [Fact]

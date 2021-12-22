@@ -7,6 +7,12 @@ namespace Rinkudesu.Services.Links.Data
     [ExcludeFromCodeCoverage]
     public class LinkDbContext : DbContext
     {
+#if DEBUG
+        public LinkDbContext()
+        {
+        }
+#endif
+
         public LinkDbContext(DbContextOptions<LinkDbContext> options) : base(options)
         {
         }
@@ -15,10 +21,7 @@ namespace Rinkudesu.Services.Links.Data
 
         public void ClearTracked()
         {
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                entry.State = EntityState.Detached;
-            }
+            ChangeTracker.Clear();
         }
     }
 }
