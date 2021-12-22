@@ -207,7 +207,7 @@ namespace Rinkudesu.Services.Links.Tests
             Assert.DoesNotContain(result, l => l.PrivacyOptions == Link.LinkPrivacyOptions.Private);
         }
 
-        private List<Link> GetSortTestLinks()
+        private static List<Link> GetSortTestLinks()
         {
             return new List<Link>
             {
