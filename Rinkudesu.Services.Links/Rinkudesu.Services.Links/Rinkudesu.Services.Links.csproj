@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <Nullable>enable</Nullable>
         <IsPackable>true</IsPackable>
@@ -10,6 +10,8 @@
         <FileVersion></FileVersion>
         <Authors>Rinkudesu</Authors>
         <Company>Rinkudesu</Company>
+        <LangVersion>default</LangVersion>
+        <AnalysisMode>All</AnalysisMode>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -21,14 +23,15 @@
       <DebugType>none</DebugType>
       <DocumentationFile>bin\Release\Rinkudesu.Services.Links.xml</DocumentationFile>
       <NoWarn>1701;1702;1591</NoWarn>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="CommandLineParser" Version="2.8.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.22" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.22">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

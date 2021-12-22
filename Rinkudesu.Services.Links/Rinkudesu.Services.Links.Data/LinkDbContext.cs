@@ -15,10 +15,7 @@ namespace Rinkudesu.Services.Links.Data
 
         public void ClearTracked()
         {
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                entry.State = EntityState.Detached;
-            }
+            ChangeTracker.Clear();
         }
     }
 }

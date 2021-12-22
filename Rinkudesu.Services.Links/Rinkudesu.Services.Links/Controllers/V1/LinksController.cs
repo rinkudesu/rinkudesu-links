@@ -47,7 +47,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel)
         {
             using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
-            var links = await _repository.GetAllLinksAsync(queryModel);
+            var links = await _repository.GetAllLinksAsync(queryModel).ConfigureAwait(false);
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }
 
@@ -66,7 +66,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             //TODO: read user id once it's available
             try
             {
-                var link = await _repository.GetLinkAsync(linkId);
+                var link = await _repository.GetLinkAsync(linkId).ConfigureAwait(false);
                 return Ok(_mapper.Map<LinkDto>(link));
             }
             catch (DataNotFoundException)
@@ -98,7 +98,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             }
             try
             {
-                await _repository.CreateLinkAsync(link);
+                await _repository.CreateLinkAsync(link).ConfigureAwait(false);
                 return CreatedAtAction(nameof(GetSingle), new { linkId = link.Id }, link);
             }
             catch (DataAlreadyExistsException)
@@ -131,7 +131,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             }
             try
             {
-                await _repository.UpdateLinkAsync(link, "CHANGEME");
+                await _repository.UpdateLinkAsync(link, "CHANGEME").ConfigureAwait(false);
                 return Ok();
             }
             catch (DataNotFoundException)
@@ -154,7 +154,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             //TODO: read user id
             try
             {
-                await _repository.DeleteLinkAsync(linkId, "CHANGEME");
+                await _repository.DeleteLinkAsync(linkId, "CHANGEME").ConfigureAwait(false);
                 return Ok();
             }
             catch (DataNotFoundException)

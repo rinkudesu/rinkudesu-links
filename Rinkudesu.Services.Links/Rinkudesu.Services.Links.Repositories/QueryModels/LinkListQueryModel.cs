@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Models;
 
@@ -13,6 +15,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         /// <summary>
         /// String that has to be contained in Url
         /// </summary>
+        [SuppressMessage("Design", "CA1056", MessageId = "URI-like properties should not be strings")]
         public string? UrlContains { get; set; }
         /// <summary>
         /// String that has to be contained in the title
@@ -70,7 +73,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             if (UrlContains != null)
             {
-                return links.Where(l => EF.Functions.ILike(l.LinkUrl, $"%{UrlContains}%"));
+                return links.Where(l => l.LinkUrl.Contains(UrlContains));
             }
             return links;
         }
@@ -79,7 +82,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             if (TitleContains != null)
             {
-                return links.Where(l => EF.Functions.ILike(l.Title, $"%{TitleContains}%"));
+                return links.Where(l => l.Title.Contains(TitleContains));
             }
             return links;
         }

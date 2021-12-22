@@ -120,7 +120,6 @@ namespace Rinkudesu.Services.Links.Tests
         [InlineData("local")]
         [InlineData("localhost")]
         [InlineData("http://localhost/")]
-        [InlineData("HTTP://LOCALHOST/")]
         public void LinkListQueryModelFilterUrlContains_UrlContainsExistingValue_SingleLinkReturned(string url)
         {
             PopulateLinks();
@@ -162,7 +161,6 @@ namespace Rinkudesu.Services.Links.Tests
         [InlineData("aya")]
         [InlineData("a")]
         [InlineData("ayaya")]
-        [InlineData("AYAYA")]
         public void LinkListQueryModelFilterTitleContains_TitleContainsExistingValue_SingleLinkReturned(string ayaya)
         {
             PopulateLinks();
@@ -209,7 +207,7 @@ namespace Rinkudesu.Services.Links.Tests
             Assert.DoesNotContain(result, l => l.PrivacyOptions == Link.LinkPrivacyOptions.Private);
         }
 
-        private List<Link> GetSortTestLinks()
+        private static List<Link> GetSortTestLinks()
         {
             return new List<Link>
             {
