@@ -7,12 +7,6 @@ namespace Rinkudesu.Services.Links.Data
     [ExcludeFromCodeCoverage]
     public class LinkDbContext : DbContext
     {
-#if DEBUG
-        public LinkDbContext()
-        {
-        }
-#endif
-
         public LinkDbContext(DbContextOptions<LinkDbContext> options) : base(options)
         {
         }
