@@ -55,7 +55,7 @@ jobs:
         dotnet-version: 5.0.x
 
     - run: |
-      dotnet build -c Release
+        dotnet build -c Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
