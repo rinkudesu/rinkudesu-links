@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.Repositories.QueryModels
@@ -11,7 +10,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         /// <summary>
         /// UserId creating the link
         /// </summary>
-        public string? UserId { get; set; }
+        public Guid? UserId { get; set; }
         /// <summary>
         /// String that has to be contained in Url
         /// </summary>
@@ -51,7 +50,6 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
 
         public void SanitizeModel()
         {
-            UserId = UserId?.Trim();
             UrlContains = UrlContains?.Trim();
             TitleContains = TitleContains?.Trim();
             if (UserId is null)

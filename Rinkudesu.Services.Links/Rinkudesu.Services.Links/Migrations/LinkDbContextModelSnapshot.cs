@@ -28,10 +28,8 @@ namespace Rinkudesu.Services.Links.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CreatingUserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                    b.Property<Guid>("CreatingUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");

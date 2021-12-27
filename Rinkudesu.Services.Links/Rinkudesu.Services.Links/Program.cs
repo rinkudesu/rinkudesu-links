@@ -6,13 +6,17 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using CommandLine;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rinkudesu.Services.Links;
 using Rinkudesu.Services.Links.Data;
@@ -110,8 +114,25 @@ void ConfigureServices(IServiceCollection services)
         options.EnableSensitiveDataLogging();
 #endif
     });
-    services.AddControllers()
+
+    var requireAuthenticated = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    services.AddControllers(o =>
+        {
+            o.Filters.Add(new AuthorizeFilter(requireAuthenticated));
+        })
         .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+    services.AddAuthentication(options => {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options => {
+            options.Authority = Environment.GetEnvironmentVariable("RINKUDESU_AUTHORITY");
+#if DEBUG
+            options.RequireHttpsMetadata = false;
+#endif
+            options.Audience = "rinkudesu";
+        });
 
     services.AddApiVersioning(o => {
         o.AssumeDefaultVersionWhenUnspecified = true;
@@ -152,7 +173,7 @@ void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
     app.UseRouting();
 
-    app.UseAuthorization();
+    app.UseAuthentication();
 
     app.UseEndpoints(endpoints => {
         endpoints.MapControllers();

@@ -11,6 +11,7 @@ using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
+using Rinkudesu.Services.Links.Utils;
 
 namespace Rinkudesu.Services.Links.Controllers.V1
 {
@@ -47,6 +48,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel)
         {
             using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
+            queryModel.UserId = User.GetIdAsGuid();
             var links = await _repository.GetAllLinksAsync(queryModel).ConfigureAwait(false);
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }
@@ -63,10 +65,9 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         public async Task<ActionResult<LinkDto>> GetSingle(Guid linkId)
         {
             using var scope = _logger.BeginScope("Requesting a link with id {linkId}", linkId);
-            //TODO: read user id once it's available
             try
             {
-                var link = await _repository.GetLinkAsync(linkId).ConfigureAwait(false);
+                var link = await _repository.GetLinkAsync(linkId, User.GetIdAsGuid()).ConfigureAwait(false);
                 return Ok(_mapper.Map<LinkDto>(link));
             }
             catch (DataNotFoundException)
@@ -90,8 +91,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         {
             using var scope = _logger.BeginScope("Creating a link {link}", newLink);
             var link = _mapper.Map<Link>(newLink);
-            //TODO: read user id once it's available
-            link.CreatingUserId = "CHANGEME";
+            link.CreatingUserId = User.GetIdAsGuid();
             if (!TryValidateModel(link))
             {
                 return BadRequest();
@@ -124,14 +124,14 @@ namespace Rinkudesu.Services.Links.Controllers.V1
                 _logger.BeginScope("Updating a link with id {linkId} with {newLink}", linkId, updatedLink);
             var link = _mapper.Map<Link>(updatedLink);
             link.Id = linkId;
-            //TODO: read user id once it's available
+            link.CreatingUserId = User.GetIdAsGuid();
             if (!TryValidateModel(link))
             {
                 return BadRequest();
             }
             try
             {
-                await _repository.UpdateLinkAsync(link, "CHANGEME").ConfigureAwait(false);
+                await _repository.UpdateLinkAsync(link, User.GetIdAsGuid()).ConfigureAwait(false);
                 return Ok();
             }
             catch (DataNotFoundException)
@@ -151,10 +151,9 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         public async Task<ActionResult> Delete(Guid linkId)
         {
             using var scope = _logger.BeginScope("Deleting link {linkId}", linkId);
-            //TODO: read user id
             try
             {
-                await _repository.DeleteLinkAsync(linkId, "CHANGEME").ConfigureAwait(false);
+                await _repository.DeleteLinkAsync(linkId, User.GetIdAsGuid()).ConfigureAwait(false);
                 return Ok();
             }
             catch (DataNotFoundException)

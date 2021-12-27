@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#pragma warning disable 1591
 #nullable disable
-#pragma warning disable CS1591
 
 namespace Rinkudesu.Services.Links.Migrations
 {
@@ -22,7 +21,7 @@ namespace Rinkudesu.Services.Links.Migrations
                     PrivacyOptions = table.Column<int>(type: "integer", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatingUserId = table.Column<string>(type: "character varying(36)", maxLength: 36, nullable: false)
+                    CreatingUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

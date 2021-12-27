@@ -29,7 +29,7 @@ namespace Rinkudesu.Services.Links.Repositories
             return await queryModel.ApplyQueryModel(_context.Links).ToListAsync(token).ConfigureAwait(false);
         }
 
-        public async Task<Link> GetLinkAsync(Guid linkId, string? gettingUserId = null, CancellationToken token = default)
+        public async Task<Link> GetLinkAsync(Guid linkId, Guid? gettingUserId = null, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(GetLinkAsync)} with linkId='{linkId}' and userId='{gettingUserId}'");
             try
@@ -66,7 +66,7 @@ namespace Rinkudesu.Services.Links.Repositories
             }
         }
 
-        public async Task UpdateLinkAsync(Link link, string updatingUserId, CancellationToken token = default)
+        public async Task UpdateLinkAsync(Link link, Guid updatingUserId, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(UpdateLinkAsync)} with link '{link}' by userId: '{updatingUserId}'");
             var oldLink =
@@ -81,7 +81,7 @@ namespace Rinkudesu.Services.Links.Repositories
             await _context.SaveChangesAsync(token).ConfigureAwait(false);
         }
 
-        public async Task DeleteLinkAsync(Guid linkId, string deletingUserId, CancellationToken token = default)
+        public async Task DeleteLinkAsync(Guid linkId, Guid deletingUserId, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(DeleteLinkAsync)} with link id '{linkId}' by user '{deletingUserId}'");
             var link = await _context.Links.FirstOrDefaultAsync(l =>

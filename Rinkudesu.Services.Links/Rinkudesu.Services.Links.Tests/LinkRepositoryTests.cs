@@ -13,6 +13,8 @@ namespace Rinkudesu.Services.Links.Tests
 {
     public class LinkRepositoryTests : ContextTests
     {
+        private static readonly Guid _userId = Guid.NewGuid();
+
         private List<Link> links = new List<Link>();
         private async Task PopulateLinksAsync()
         {
@@ -23,7 +25,7 @@ namespace Rinkudesu.Services.Links.Tests
                 new Link { Title = "ayaya" },
                 new Link { Description = "tuturu*" },
                 new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
-                new Link { CreatingUserId = "a" }
+                new Link { CreatingUserId = _userId }
             };
             _context.Links.AddRange(links);
             await _context.SaveChangesAsync();
@@ -63,25 +65,24 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var requestGuid = links.First(l => l.CreatingUserId == "a").Id;
+            var requestGuid = links.First(l => l.CreatingUserId == _userId).Id;
 
-            var result = await repo.GetLinkAsync(requestGuid, "a");
+            var result = await repo.GetLinkAsync(requestGuid, _userId);
 
             Assert.Equal(requestGuid, result.Id);
         }
 
         [Theory]
         [InlineData(null)]
-        [InlineData("aa")]
-        [InlineData("")]
-        [InlineData("aosujdfhao")]
+        [InlineData("f1f854d8-bc3c-4fd3-8583-155afd2a403a")]
         public async Task LinkRepositoryGetLink_RequestedPrivateLinkWithInvalidUserId_DataNotFoundThrown(string? userId)
         {
+            Guid? guid = userId is not null ? new Guid(userId) : null;
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var requestGuid = links.First(l => l.CreatingUserId == "a").Id;
+            var requestGuid = links.First(l => l.CreatingUserId == _userId).Id;
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.GetLinkAsync(requestGuid, userId));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.GetLinkAsync(requestGuid, guid));
         }
 
         [Fact]
@@ -112,16 +113,16 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = links.First(l => l.CreatingUserId == "a");
+            var link = links.First(l => l.CreatingUserId == _userId);
             var updatedLink = new Link
             {
                 Id = link.Id,
                 Description = "test",
-                CreatingUserId = "a" //TODO: remove this assignment as this should not be changeable here
+                CreatingUserId = _userId //TODO: remove this assignment as this should not be changeable here
             };
             _context.ClearTracked();
 
-            await repo.UpdateLinkAsync(updatedLink, "a");
+            await repo.UpdateLinkAsync(updatedLink, _userId);
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.Equal(updatedLink.Description, dbLink?.Description);
@@ -132,11 +133,11 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = links.First(l => l.CreatingUserId == "a");
+            var link = links.First(l => l.CreatingUserId == _userId);
             link.Description = "test";
             _context.ClearTracked();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, "b"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, Guid.NewGuid()));
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.Null(dbLink?.Description);
@@ -147,9 +148,9 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = new Link { CreatingUserId = "a" };
+            var link = new Link { CreatingUserId = _userId };
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, "a"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.UpdateLinkAsync(link, _userId));
         }
 
         [Fact]
@@ -157,10 +158,10 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = links.First(l => l.CreatingUserId == "a");
+            var link = links.First(l => l.CreatingUserId == _userId);
             _context.ClearTracked();
 
-            await repo.DeleteLinkAsync(link.Id, "a");
+            await repo.DeleteLinkAsync(link.Id, _userId);
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.Null(dbLink);
@@ -171,11 +172,11 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = links.First(l => l.CreatingUserId == "a");
+            var link = links.First(l => l.CreatingUserId == _userId);
             link.Description = "test";
             _context.ClearTracked();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, "b"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, Guid.NewGuid()));
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.NotNull(dbLink);
@@ -186,9 +187,9 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = new Link { CreatingUserId = "a" };
+            var link = new Link { CreatingUserId = _userId };
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, "a"));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.DeleteLinkAsync(link.Id, _userId));
         }
 
         [Fact]
@@ -207,14 +208,15 @@ namespace Rinkudesu.Services.Links.Tests
         [Fact]
         public async Task UpdateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
         {
-            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = "aaa"});
+            var userId = Guid.NewGuid();
+            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = userId});
             await _context.SaveChangesAsync();
             var id = _context.Links.First().Id;
             _context.ClearTracked();
             var repo = CreateRepository();
             var link = new Link { Id = id, CreationDate = DateTime.MaxValue, LastUpdate = DateTime.MinValue };
 
-            await repo.UpdateLinkAsync(link, "aaa");
+            await repo.UpdateLinkAsync(link, userId);
 
             var updated = _context.Links.First();
             Assert.Equal(DateTime.MinValue, updated.CreationDate);
