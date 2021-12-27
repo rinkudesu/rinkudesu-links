@@ -127,13 +127,12 @@ void ConfigureServices(IServiceCollection services)
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
         .AddJwtBearer(options => {
-            options.Authority = "http://localhost:8080/auth/realms/rinkudesu"; //todo: make configurable
+            options.Authority = Environment.GetEnvironmentVariable("RINKUDESU_AUTHORITY");
 #if DEBUG
             options.RequireHttpsMetadata = false;
 #endif
             options.Audience = "rinkudesu";
         });
-    // services.AddAuthorization();
 
     services.AddApiVersioning(o => {
         o.AssumeDefaultVersionWhenUnspecified = true;
@@ -175,7 +174,6 @@ void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     app.UseRouting();
 
     app.UseAuthentication();
-    // app.UseAuthorization();
 
     app.UseEndpoints(endpoints => {
         endpoints.MapControllers();
