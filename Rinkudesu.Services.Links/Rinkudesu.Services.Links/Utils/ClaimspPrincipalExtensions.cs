@@ -6,7 +6,9 @@ using System.Security.Claims;
 namespace Rinkudesu.Services.Links.Utils;
 
 [ExcludeFromCodeCoverage]
+#pragma warning disable CS1591
 public static class ClaimsPrincipalExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Returns the id of the current user

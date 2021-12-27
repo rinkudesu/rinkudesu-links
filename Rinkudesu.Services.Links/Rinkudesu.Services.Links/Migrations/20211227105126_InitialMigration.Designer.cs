@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Rinkudesu.Services.Links.Data;
 
+#pragma warning disable 1591
 #nullable disable
 
 namespace Rinkudesu.Services.Links.Migrations
