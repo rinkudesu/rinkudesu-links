@@ -29,7 +29,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Link requested</returns>
         /// <exception cref="DataNotFoundException">Thrown when no link exists with given <param name="linkId"></param></exception>
-        Task<Link> GetLinkAsync(Guid linkId, string? gettingUserId = null, CancellationToken token = default);
+        Task<Link> GetLinkAsync(Guid linkId, Guid? gettingUserId = null, CancellationToken token = default);
         /// <summary>
         /// Creates the new link as provided
         /// </summary>
@@ -46,7 +46,7 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable task</returns>
         /// <exception cref="DataNotFoundException">Thrown when no link with the same key exists</exception>
-        Task UpdateLinkAsync(Link link, string updatingUserId, CancellationToken token = default);
+        Task UpdateLinkAsync(Link link, Guid updatingUserId, CancellationToken token = default);
 
         /// <summary>
         /// Deletes the link from the store
@@ -56,6 +56,6 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable task</returns>
         /// <exception cref="DataNotFoundException">Thrown when no link exists with ID equal to <param name="linkId"></param></exception>
-        Task DeleteLinkAsync(Guid linkId, string deletingUserId, CancellationToken token = default);
+        Task DeleteLinkAsync(Guid linkId, Guid deletingUserId, CancellationToken token = default);
     }
 }

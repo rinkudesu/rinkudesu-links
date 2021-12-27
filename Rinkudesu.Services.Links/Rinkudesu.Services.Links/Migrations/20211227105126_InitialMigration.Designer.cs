@@ -8,12 +8,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Rinkudesu.Services.Links.Data;
 
 #nullable disable
-#pragma warning disable CS1591
 
 namespace Rinkudesu.Services.Links.Migrations
 {
     [DbContext(typeof(LinkDbContext))]
-    [Migration("20211222193737_InitialMigration")]
+    [Migration("20211227105126_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,10 +30,8 @@ namespace Rinkudesu.Services.Links.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CreatingUserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                    b.Property<Guid>("CreatingUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");

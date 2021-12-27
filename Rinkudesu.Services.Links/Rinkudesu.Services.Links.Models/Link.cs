@@ -29,8 +29,7 @@ namespace Rinkudesu.Services.Links.Models
         public DateTime CreationDate { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime LastUpdate { get; set; }
-        [MaxLength(36)]
-        public string CreatingUserId { get; set; }
+        public Guid CreatingUserId { get; set; }
 
         public Link()
         {
@@ -38,7 +37,7 @@ namespace Rinkudesu.Services.Links.Models
             LastUpdate = CreationDate;
             LinkUrl = string.Empty;
             Title = string.Empty;
-            CreatingUserId = string.Empty;
+            CreatingUserId = Guid.Empty;
         }
 
         public void SetCreateDates(DateTime? creationTimeUtc = null)
