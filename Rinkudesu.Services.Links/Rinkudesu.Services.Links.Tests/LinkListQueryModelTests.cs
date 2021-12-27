@@ -9,6 +9,8 @@ namespace Rinkudesu.Services.Links.Tests
 {
     public class LinkListQueryModelTests
     {
+        private static readonly Guid _userId = Guid.NewGuid();
+
         private List<Link> links = new List<Link>();
         private void PopulateLinks()
         {
@@ -19,7 +21,7 @@ namespace Rinkudesu.Services.Links.Tests
                 new Link { Title = "ayaya" },
                 new Link { Description = "tuturu*" },
                 new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
-                new Link { CreatingUserId = "a" }
+                new Link { CreatingUserId = _userId }
             };
         }
 
@@ -28,14 +30,14 @@ namespace Rinkudesu.Services.Links.Tests
         {
             var model = new LinkListQueryModel
             {
-                UserId = "   test       ",
+                UserId = _userId,
                 UrlContains = "          test                    ",
                 TitleContains = "               test"
             };
 
             model.SanitizeModel();
 
-            Assert.Equal("test", model.UserId);
+            Assert.Equal(_userId, model.UserId);
             Assert.Equal("test", model.UrlContains);
             Assert.Equal("test", model.TitleContains);
         }
@@ -69,7 +71,7 @@ namespace Rinkudesu.Services.Links.Tests
         public void LinkListQueryModelFilterUserId_UserIdNotInAnyLink_ReturnsPublicOnly()
         {
             PopulateLinks();
-            var model = new LinkListQueryModel { UserId = "invalid" };
+            var model = new LinkListQueryModel { UserId = Guid.NewGuid() };
 
             var result = model.FilterUserId(links.AsQueryable());
 
@@ -81,12 +83,12 @@ namespace Rinkudesu.Services.Links.Tests
         public void LinkListQueryModelFilteredUserId_UserIdMatchingOnce_ReturnsPublicAndValidLinks()
         {
             PopulateLinks();
-            var model = new LinkListQueryModel { UserId = "a" };
+            var model = new LinkListQueryModel { UserId = _userId };
 
             var result = model.FilterUserId(links.AsQueryable());
 
             Assert.Equal(2, result.Count());
-            Assert.Contains(result, l => l.CreatingUserId == "a");
+            Assert.Contains(result, l => l.CreatingUserId == _userId);
             Assert.Contains(result, l => l.PrivacyOptions == Link.LinkPrivacyOptions.Public);
         }
 
