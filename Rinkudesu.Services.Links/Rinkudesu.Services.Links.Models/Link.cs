@@ -30,6 +30,9 @@ namespace Rinkudesu.Services.Links.Models
         [DataType(DataType.DateTime)]
         public DateTime LastUpdate { get; set; }
         public Guid CreatingUserId { get; set; }
+        [MinLength(51)]
+        [MaxLength(51)]
+        public string? ShareableKey { get; set; }
 
         public Link()
         {
