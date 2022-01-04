@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links.Models
@@ -64,6 +66,23 @@ namespace Rinkudesu.Services.Links.Models
             PrivacyOptions = newLink.PrivacyOptions;
             SetUpdateDate();
         }
+
+        /// <summary>
+        /// Generates a new value for <see cref="ShareableKey"/>, unless it already exists and <paramref name="regenerate"/> is <see langword="false"/>
+        /// </summary>
+        /// <returns>Generated key value</returns>
+        public string GenerateShareableKey(bool regenerate = true)
+        {
+            if (ShareableKey is not null && !regenerate)
+            {
+                return ShareableKey;
+            }
+
+            ShareableKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(51));
+            return ShareableKey;
+        }
+
+        public void Unshare() => ShareableKey = null;
 
         public override string ToString()
         {
