@@ -102,6 +102,7 @@ void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<ILinkRepository, LinkRepository>();
     services.AddAutoMapper(typeof(LinkMappingProfile));
+    services.AddScoped<ISharedLinkRepository, SharedLinkRepository>();
 
     services.AddDbContext<LinkDbContext>(options => {
         options.UseNpgsql(
