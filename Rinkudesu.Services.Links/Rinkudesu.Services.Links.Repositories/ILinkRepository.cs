@@ -57,5 +57,13 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <returns>Awaitable task</returns>
         /// <exception cref="DataNotFoundException">Thrown when no link exists with ID equal to <param name="linkId"></param></exception>
         Task DeleteLinkAsync(Guid linkId, Guid deletingUserId, CancellationToken token = default);
+        /// <summary>
+        /// Retrieves the link using the shareable key
+        /// </summary>
+        /// <param name="key">Shareable key to find</param>
+        /// <exception cref="DataNotFoundException">If no link was found with the given link</exception>
+        /// <param name="token">Token to cancel async operation</param>
+        /// <returns>Found link</returns>
+        Task<Link> GetLinkByKeyAsync(string key, CancellationToken token = default);
     }
 }

@@ -29,6 +29,20 @@ namespace Rinkudesu.Services.Links.Repositories
             return await queryModel.ApplyQueryModel(_context.Links).ToListAsync(token).ConfigureAwait(false);
         }
 
+        public async Task<Link> GetLinkByKeyAsync(string key, CancellationToken token = default)
+        {
+            try
+            {
+                return await _context.Links.AsNoTracking().FirstAsync(l => l.ShareableKey == key, token)
+                    .ConfigureAwait(false);
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogInformation("Unable to get link by shareable key");
+                throw new DataNotFoundException();
+            }
+        }
+
         public async Task<Link> GetLinkAsync(Guid linkId, Guid? gettingUserId = null, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(GetLinkAsync)} with linkId='{linkId}' and userId='{gettingUserId}'");
