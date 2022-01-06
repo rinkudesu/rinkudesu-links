@@ -78,7 +78,8 @@ namespace Rinkudesu.Services.Links.Models
                 return ShareableKey;
             }
 
-            ShareableKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(51));
+            // this 36 bytes will return a base64 string with length of 48
+            ShareableKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(36));
             return ShareableKey;
         }
 
