@@ -22,7 +22,7 @@ namespace Rinkudesu.Services.Links.Tests
             {
                 new Link(),
                 new Link { LinkUrl = "http://localhost/" },
-                new Link { Title = "ayaya" },
+                new Link { Title = "ayaya", ShareableKey = "test" },
                 new Link { Description = "tuturu*" },
                 new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
                 new Link { CreatingUserId = _userId }
@@ -221,6 +221,26 @@ namespace Rinkudesu.Services.Links.Tests
             var updated = _context.Links.First();
             Assert.Equal(DateTime.MinValue, updated.CreationDate);
             Assert.NotEqual(DateTime.MaxValue, updated.LastUpdate);
+        }
+
+        [Theory]
+        [InlineData("test")]
+        public async Task GetLinkByKeyAsync_NoMatchingLink_Thrown(string keyTest)
+        {
+            var repo = CreateRepository();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(() => repo.GetLinkByKeyAsync(keyTest));
+        }
+
+        [Fact]
+        public async Task GetLinkByKeyAsync_LinkExists_Returns()
+        {
+            await PopulateLinksAsync();
+            var repo = CreateRepository();
+
+            var result = await repo.GetLinkByKeyAsync("test");
+
+            Assert.Equal("test", result.ShareableKey);
         }
     }
 }

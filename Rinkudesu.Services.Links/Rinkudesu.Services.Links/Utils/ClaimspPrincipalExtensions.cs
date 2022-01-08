@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
+using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links.Utils;
 
@@ -26,4 +27,9 @@ public static class ClaimsPrincipalExtensions
     /// Parses current user id as <see cref="Guid"/>
     /// </summary>
     public static Guid GetIdAsGuid(this ClaimsPrincipal user) => Guid.Parse(user.GetId());
+
+    /// <summary>
+    /// Transforms <see cref="ClaimsPrincipal"/> into <see cref="UserInfo"/>
+    /// </summary>
+    public static UserInfo GetUserInfo(this ClaimsPrincipal user) => new UserInfo(user.GetIdAsGuid());
 }

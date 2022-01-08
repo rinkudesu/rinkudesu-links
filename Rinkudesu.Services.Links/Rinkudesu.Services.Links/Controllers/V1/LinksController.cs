@@ -11,6 +11,7 @@ using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
+using Rinkudesu.Services.Links.Utilities;
 using Rinkudesu.Services.Links.Utils;
 
 namespace Rinkudesu.Services.Links.Controllers.V1
@@ -27,7 +28,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
     {
         private readonly IMapper _mapper;
         private readonly ILinkRepository _repository;
-        private readonly ILogger _logger;
+        private readonly ILogger<LinksController> _logger;
 
 #pragma warning disable 1591
         public LinksController(ILinkRepository repository, IMapper mapper, ILogger<LinksController> logger)
@@ -77,6 +78,29 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         }
 
         /// <summary>
+        /// Finds a single link by shareable key and returns its details
+        /// </summary>
+        /// <param name="key">Shareable key of the link encoded</param>
+        /// <returns>Found link</returns>
+        /// <response code="404">When no link was found with matching key</response>
+        [HttpGet("{key}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<LinkDto>> GetSingleByKey(string key)
+        {
+            using var scope = _logger.BeginScope("Requesting a link with key");
+            try
+            {
+                var link = await _repository.GetLinkByKeyAsync(key);
+                return Ok(_mapper.Map<LinkDto>(link));
+            }
+            catch (DataNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        /// <summary>
         /// Creates a single new link
         /// </summary>
         /// <param name="newLink"></param>
@@ -99,7 +123,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             try
             {
                 await _repository.CreateLinkAsync(link).ConfigureAwait(false);
-                return CreatedAtAction(nameof(GetSingle), new { linkId = link.Id }, link);
+                return CreatedAtAction(nameof(Create), new { linkId = link.Id }, link);
             }
             catch (DataAlreadyExistsException)
             {
