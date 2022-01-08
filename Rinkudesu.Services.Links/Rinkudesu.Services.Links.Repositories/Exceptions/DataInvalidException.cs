@@ -16,7 +16,7 @@ public class DataInvalidException : RepositoryException
     {
     }
 
-    public DataInvalidException(Guid primaryKey) : base($"Data with primary key {primaryKey} was not invalid for the given context")
+    public DataInvalidException(Guid primaryKey) : base($"Data with primary key {primaryKey} was invalid for the given context")
     {
     }
 

@@ -10,7 +10,7 @@ namespace Rinkudesu.Services.Links.Repositories;
 public interface ISharedLinkRepository : IRequiresUserInfo<ISharedLinkRepository>
 {
     /// <summary>
-    /// Creates shared key by which the link can be accessed
+    /// Creates shareable key by which the link can be accessed
     /// </summary>
     /// <param name="linkId">Id of the link to share</param>
     /// <param name="cancellationToken">Optional token to cancel the request</param>
@@ -19,7 +19,7 @@ public interface ISharedLinkRepository : IRequiresUserInfo<ISharedLinkRepository
     /// <returns>Generated shareable key</returns>
     Task<string> ShareLinkById(Guid linkId, CancellationToken cancellationToken = default);
     /// <summary>
-    /// Removes shared key by which the link can be accessed
+    /// Removes shareable key by which the link can be accessed
     /// </summary>
     /// <param name="linkId">Id of the link to unshare</param>
     /// <param name="cancellationToken">Optional token to cancel the request</param>
