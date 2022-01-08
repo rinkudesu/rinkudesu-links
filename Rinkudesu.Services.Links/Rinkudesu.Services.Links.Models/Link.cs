@@ -78,7 +78,8 @@ namespace Rinkudesu.Services.Links.Models
             }
 
             // this 36 bytes will return a base64 string with length of 48
-            ShareableKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(36));
+            // this will also remove / and + from base64 as they are kinda important url characters
+            ShareableKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(36)).Replace("/", "_", StringComparison.Ordinal).Replace("+", "-", StringComparison.Ordinal);
             return ShareableKey;
         }
 
