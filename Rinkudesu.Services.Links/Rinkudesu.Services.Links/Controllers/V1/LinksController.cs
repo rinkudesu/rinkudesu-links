@@ -11,6 +11,7 @@ using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
+using Rinkudesu.Services.Links.Utilities;
 using Rinkudesu.Services.Links.Utils;
 
 namespace Rinkudesu.Services.Links.Controllers.V1
@@ -79,7 +80,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         /// <summary>
         /// Finds a single link by shareable key and returns its details
         /// </summary>
-        /// <param name="key">Shareable key of the link</param>
+        /// <param name="key">Shareable key of the link encoded in base64</param>
         /// <returns>Found link</returns>
         /// <response code="404">When no link was found with matching key</response>
         [HttpGet("{key}")]
@@ -90,7 +91,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             using var scope = _logger.BeginScope("Requesting a link with key");
             try
             {
-                var link = await _repository.GetLinkByKeyAsync(key);
+                var link = await _repository.GetLinkByKeyAsync(key.FromBase64());
                 return Ok(_mapper.Map<LinkDto>(link));
             }
             catch (DataNotFoundException)
