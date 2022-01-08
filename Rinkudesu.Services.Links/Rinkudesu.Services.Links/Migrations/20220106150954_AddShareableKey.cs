@@ -15,6 +15,8 @@ namespace Rinkudesu.Services.Links.Migrations
                 type: "character varying(51)",
                 maxLength: 51,
                 nullable: true);
+
+            migrationBuilder.Sql("CREATE UNIQUE INDEX \"IX_ShareableKey\" ON \"Links\"(\"ShareableKey\") WHERE \"ShareableKey\" IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

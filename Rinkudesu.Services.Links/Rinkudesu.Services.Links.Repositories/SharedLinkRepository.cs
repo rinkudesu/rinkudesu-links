@@ -30,12 +30,7 @@ public class SharedLinkRepository : ISharedLinkRepository
         return this;
     }
 
-    public async Task<string> ShareLinkById(Guid linkId, CancellationToken cancellationToken = default) =>
-        await _context.Database.CreateExecutionStrategy().ExecuteInTransactionAsync(c => SetKeyInternal(linkId, c),
-            c => VerifyKeySetInternal(linkId, c),
-            IsolationLevel.Serializable, cancellationToken).ConfigureAwait(false);
-
-    private async Task<string> SetKeyInternal(Guid linkId, CancellationToken cancellationToken)
+    public async Task<string> ShareLinkById(Guid linkId, CancellationToken cancellationToken = default)
     {
         var link = await GetLink(linkId, cancellationToken).ConfigureAwait(false);
 
@@ -52,13 +47,6 @@ public class SharedLinkRepository : ISharedLinkRepository
         TrackKeyChange(link);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return key;
-    }
-
-    private async Task<bool> VerifyKeySetInternal(Guid linkId, CancellationToken cancellationToken)
-    {
-        _context.ClearTracked();
-        return await _context.Links.AnyAsync(l => l.Id == linkId && l.ShareableKey != null, cancellationToken)
-            .ConfigureAwait(false);
     }
 
     public async Task UnshareLinkById(Guid linkId, CancellationToken cancellationToken = default)
