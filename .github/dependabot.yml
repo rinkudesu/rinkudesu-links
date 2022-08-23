@@ -9,11 +9,9 @@ updates:
     directory: "/Rinkudesu.Services.Links" # Location of package manifests
     schedule:
       interval: "daily"
-    ignore:
-    - dependency-name: Microsoft.EntityFrameworkCore.Sqlite
-    - dependency-name: Microsoft.EntityFrameworkCore.Tools
-    - dependency-name: Microsoft.EntityFrameworkCore
-    - dependency-name: Microsoft.EntityFrameworkCore.Relational
-    - dependency-name: Npgsql.EntityFrameworkCore.PostgreSQL
-    - dependency-name: Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions
-    - dependency-name: Microsoft.VisualStudio.Web.CodeGeneration.Design
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Check for updates to GitHub Actions every weekday
+      interval: "daily"
