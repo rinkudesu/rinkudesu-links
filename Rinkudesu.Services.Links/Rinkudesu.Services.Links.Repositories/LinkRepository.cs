@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Rinkudesu.Kafka.Dotnet.Base;
 using Rinkudesu.Services.Links.Data;
+using Rinkudesu.Services.Links.MessageQueues;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
@@ -14,13 +16,15 @@ namespace Rinkudesu.Services.Links.Repositories
 {
     public class LinkRepository : ILinkRepository
     {
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly LinkDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<LinkRepository> _logger;
 
-        public LinkRepository(LinkDbContext context, ILogger<LinkRepository> logger)
+        public LinkRepository(LinkDbContext context, ILogger<LinkRepository> logger, IKafkaProducer kafkaProducer)
         {
             _context = context;
             _logger = logger;
+            _kafkaProducer = kafkaProducer;
         }
 
         public async Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, CancellationToken token = default)
@@ -67,6 +71,8 @@ namespace Rinkudesu.Services.Links.Repositories
             try
             {
                 await _context.SaveChangesAsync(token).ConfigureAwait(false);
+                //todo: come up with a way to handle the next line failing (remove stuff from database?)
+                await _kafkaProducer.ProduceNewLink(link, CancellationToken.None);
             }
             catch (DbUpdateException e)
             {
@@ -107,6 +113,7 @@ namespace Rinkudesu.Services.Links.Repositories
             }
             _context.Links.Remove(link);
             await _context.SaveChangesAsync(token).ConfigureAwait(false);
+            await _kafkaProducer.ProduceDeletedLink(link, CancellationToken.None);
         }
     }
 }

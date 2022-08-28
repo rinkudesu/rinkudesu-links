@@ -14,5 +14,9 @@
     <ItemGroup>
         <PackageReference Include="Rinkudesu.Kafka.Dotnet" Version="0.0.1" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Rinkudesu.Services.Links.Models\Rinkudesu.Services.Links.Models.csproj" />
+    </ItemGroup>
 
 </Project>

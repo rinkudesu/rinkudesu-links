@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Rinkudesu.Kafka.Dotnet.Base;
+using Rinkudesu.Services.Links.MessageQueues.Messages;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
@@ -33,7 +37,9 @@ namespace Rinkudesu.Services.Links.Tests
 
         private LinkRepository CreateRepository()
         {
-            return new LinkRepository(_context, new NullLogger<LinkRepository>());
+            var mockKafkaHandler = new Mock<IKafkaProducer>();
+            mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            return new LinkRepository(_context, new NullLogger<LinkRepository>(), mockKafkaHandler.Object);
         }
 
         [Fact]
