@@ -124,9 +124,9 @@ namespace Rinkudesu.Services.Links.Repositories
             var state = new { context = _context, kafka = _kafkaProducer, link };
             _ = await _context.ExecuteInTransaction(state, async (localState, c) => {
                 localState.context.ClearTracked();
-                localState.context.Remove(localState.link!);
+                localState.context.Remove(localState.link);
                 await localState.context.SaveChangesAsync(c).ConfigureAwait(false);
-                await localState.kafka.ProduceDeletedLink(localState.link!, CancellationToken.None);
+                await localState.kafka.ProduceDeletedLink(localState.link, CancellationToken.None).ConfigureAwait(false);
                 return true;
             }, cancellationToken: token).ConfigureAwait(false);
         }
