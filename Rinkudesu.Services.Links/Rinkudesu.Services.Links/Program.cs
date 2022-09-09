@@ -24,6 +24,9 @@ using Rinkudesu.Services.Links;
 using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.DataTransferObjects;
 using Rinkudesu.Services.Links.HealthChecks;
+using Rinkudesu.Services.Links.HostedServices;
+using Rinkudesu.Services.Links.MessageHandlers;
+using Rinkudesu.Services.Links.MessageQueues.Messages;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Utilities;
 using Serilog;
@@ -106,6 +109,10 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<ILinkRepository, LinkRepository>();
     services.AddAutoMapper(typeof(LinkMappingProfile));
     services.AddScoped<ISharedLinkRepository, SharedLinkRepository>();
+
+    services.AddSingleton<IKafkaSubscriber<UserDeletedMessage>, KafkaSubscriber<UserDeletedMessage>>();
+    services.AddSingleton<IKafkaSubscriberHandler<UserDeletedMessage>, UserDeletedMessageHandler>();
+    services.AddHostedService<UserDeletedQueueListener>();
 
     services.AddDbContext<LinkDbContext>(options => {
         options.UseNpgsql(

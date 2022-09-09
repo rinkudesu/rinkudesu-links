@@ -65,5 +65,14 @@ namespace Rinkudesu.Services.Links.Repositories
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Found link</returns>
         Task<Link> GetLinkByKeyAsync(string key, CancellationToken token = default);
+
+        /// <summary>
+        /// Removes all links for a given user.
+        /// </summary>
+        /// <remarks>
+        /// Designed to be only run by admin jobs. Not intended to be run manually by any user.
+        /// Important note is that this action does not send delete messages to queue. That's because it's designed to be run after receiving "User deleted" message, and the assumption is that this message was also received by all other services that store references to links.
+        /// </remarks>
+        Task ForceRemoveAllUserLinks(Guid userId, CancellationToken cancellationToken = default);
     }
 }
