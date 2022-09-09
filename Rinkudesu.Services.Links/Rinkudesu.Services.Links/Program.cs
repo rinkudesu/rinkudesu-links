@@ -199,8 +199,7 @@ static void ApplyMigrations(IApplicationBuilder app)
 
 static void SetupKafka(IServiceCollection serviceCollection)
 {
-    //todo: load those in a better way
-    var kafkaConfig = new KafkaConfigurationProvider("localhost:9092", null, null, Assembly.GetExecutingAssembly().FullName!);
+    var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
     serviceCollection.AddSingleton(kafkaConfig);
     serviceCollection.AddSingleton<IKafkaProducer, KafkaProducer>();
 }
