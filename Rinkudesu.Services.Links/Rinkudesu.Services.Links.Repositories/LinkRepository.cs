@@ -121,9 +121,14 @@ namespace Rinkudesu.Services.Links.Repositories
                 _logger.LogInformation($"Link '{linkId}' was unable to be found for user '{deletingUserId}'");
                 throw new DataNotFoundException(linkId);
             }
-            _context.Links.Remove(link);
-            await _context.SaveChangesAsync(token).ConfigureAwait(false);
-            await _kafkaProducer.ProduceDeletedLink(link, CancellationToken.None);
+            var state = new { context = _context, kafka = _kafkaProducer, link };
+            _ = await _context.ExecuteInTransaction(state, async (localState, c) => {
+                localState.context.ClearTracked();
+                localState.context.Remove(localState.link!);
+                await localState.context.SaveChangesAsync(c).ConfigureAwait(false);
+                await localState.kafka.ProduceDeletedLink(localState.link!, CancellationToken.None);
+                return true;
+            }, cancellationToken: token).ConfigureAwait(false);
         }
     }
 }

@@ -265,5 +265,20 @@ namespace Rinkudesu.Services.Links.Tests
 
             Assert.Empty(_context.Links);
         }
+
+        [Fact]
+        public async Task LinkRepositoryDeleteLink_DeleteExistingLinkWithValidUserIdFailedToPublishToKafka_LinkNotDeleted()
+        {
+            await PopulateLinksAsync();
+            _mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).ThrowsAsync(new KafkaProduceException());
+            var repo = CreateRepository();
+            var link = links.First(l => l.CreatingUserId == _userId);
+            _context.ClearTracked();
+
+            await Assert.ThrowsAsync<KafkaProduceException>(() => repo.DeleteLinkAsync(link.Id, _userId));
+
+            var dbLink = await _context.Links.FindAsync(link.Id);
+            Assert.NotNull(dbLink);
+        }
     }
 }
