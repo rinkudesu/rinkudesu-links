@@ -2,37 +2,39 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Data;
+using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links.Tests
 {
     public class TestContext : IDisposable
     {
         private readonly LinkDbContext context;
-        private readonly SqliteConnection connection;
 
         public LinkDbContext DbContext => context;
 
-        private TestContext(LinkDbContext context, SqliteConnection connection)
+        private TestContext(LinkDbContext context)
         {
-            this.connection = connection;
             this.context = context;
         }
 
         public static TestContext GetTestContext()
         {
-            var connection = new SqliteConnection("Filename=:memory:");
-            connection.Open();
-            var options = new DbContextOptionsBuilder<LinkDbContext>().UseSqlite(connection);
+            var databaseName = Guid.NewGuid().ToString();
+            var connectionString = $"Server=127.0.0.1;Port=5432;Database={databaseName};User Id=postgres;Password=postgres;";
+            var options = new DbContextOptionsBuilder<LinkDbContext>().UseNpgsql(
+                connectionString, providerOptions => {
+                    providerOptions.EnableRetryOnFailure();
+                    providerOptions.MigrationsAssembly("Rinkudesu.Services.Links");
+                });
             var dbContext = new LinkDbContext(options.Options);
             dbContext.Database.EnsureCreated();
-            return new TestContext(dbContext, connection);
+            return new TestContext(dbContext);
         }
 
         public void Dispose()
         {
-            context?.Dispose();
-            connection?.Close();
-            connection?.Dispose();
+            context.Database.EnsureDeleted();
+            context.Dispose();
         }
     }
 }
