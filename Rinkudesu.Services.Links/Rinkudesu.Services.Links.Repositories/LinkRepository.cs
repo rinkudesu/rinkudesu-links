@@ -134,7 +134,7 @@ namespace Rinkudesu.Services.Links.Repositories
         public async Task ForceRemoveAllUserLinks(Guid userId, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Removing all links for user '{UserId}'", userId.ToString());
-            await _context.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM \"Links\" WHERE \"CreatingUserId\" = {userId}", cancellationToken);
+            await _context.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM \"Links\" WHERE \"CreatingUserId\" = {userId}", cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -41,5 +41,6 @@ public sealed class UserDeletedQueueListener : IHostedService, IAsyncDisposable
     {
         _cancellationToken.Cancel();
         await _subscriber.DisposeAsync();
+        _cancellationToken.Dispose();
     }
 }
