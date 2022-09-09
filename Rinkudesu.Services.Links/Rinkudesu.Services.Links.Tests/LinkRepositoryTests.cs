@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Rinkudesu.Kafka.Dotnet.Base;
@@ -27,15 +28,16 @@ namespace Rinkudesu.Services.Links.Tests
         }
 
         private List<Link> links = new List<Link>();
+
         private async Task PopulateLinksAsync()
         {
             links = new List<Link>
             {
-                new Link(),
-                new Link { LinkUrl = "http://localhost/" },
-                new Link { Title = "ayaya", ShareableKey = "test" },
-                new Link { Description = "tuturu*" },
-                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
+                new Link { CreatingUserId = _userId },
+                new Link { LinkUrl = "http://localhost/", CreatingUserId = _userId },
+                new Link { Title = "ayaya", ShareableKey = "test", CreatingUserId = _userId },
+                new Link { Description = "tuturu*", CreatingUserId = Guid.NewGuid() },
+                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, CreatingUserId = Guid.NewGuid() },
                 new Link { CreatingUserId = _userId }
             };
             _context.Links.AddRange(links);
@@ -220,7 +222,7 @@ namespace Rinkudesu.Services.Links.Tests
         public async Task UpdateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
         {
             var userId = Guid.NewGuid();
-            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = userId});
+            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = userId });
             await _context.SaveChangesAsync();
             var id = _context.Links.First().Id;
             _context.ClearTracked();
@@ -279,6 +281,28 @@ namespace Rinkudesu.Services.Links.Tests
 
             var dbLink = await _context.Links.FindAsync(link.Id);
             Assert.NotNull(dbLink);
+        }
+
+        [Fact]
+        public async Task ForceDeleteAllUserLinks_NoLinksForUser_RunsAndDeletesNothing()
+        {
+            await PopulateLinksAsync();
+            var repo = CreateRepository();
+
+            await repo.ForceRemoveAllUserLinks(Guid.NewGuid());
+
+            Assert.Equal(links.Count, await _context.Links.CountAsync());
+        }
+
+        [Fact]
+        public async Task ForceDeleteAllUserLinks_LinksExistForUser_DeletesAllUserLinks()
+        {
+            await PopulateLinksAsync();
+            var repo = CreateRepository();
+
+            await repo.ForceRemoveAllUserLinks(_userId);
+
+            Assert.DoesNotContain(_context.Links, l => l.CreatingUserId == _userId);
         }
     }
 }
