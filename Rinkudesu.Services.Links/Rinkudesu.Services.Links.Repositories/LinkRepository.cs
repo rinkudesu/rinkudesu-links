@@ -5,7 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Rinkudesu.Kafka.Dotnet.Base;
+using Rinkudesu.Kafka.Dotnet.Exceptions;
 using Rinkudesu.Services.Links.Data;
+using Rinkudesu.Services.Links.MessageQueues;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
@@ -14,13 +17,15 @@ namespace Rinkudesu.Services.Links.Repositories
 {
     public class LinkRepository : ILinkRepository
     {
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly LinkDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<LinkRepository> _logger;
 
-        public LinkRepository(LinkDbContext context, ILogger<LinkRepository> logger)
+        public LinkRepository(LinkDbContext context, ILogger<LinkRepository> logger, IKafkaProducer kafkaProducer)
         {
             _context = context;
             _logger = logger;
+            _kafkaProducer = kafkaProducer;
         }
 
         public async Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, CancellationToken token = default)
@@ -63,10 +68,16 @@ namespace Rinkudesu.Services.Links.Repositories
         {
             _logger.LogDebug($"Executing {nameof(CreateLinkAsync)} with link: '{link}'");
             link.SetCreateDates();
-            _context.Links.Add(link);
             try
             {
-                await _context.SaveChangesAsync(token).ConfigureAwait(false);
+                var state = new { context = _context, kafka = _kafkaProducer, link };
+                _ = await _context.ExecuteInTransaction(state, async (localState, c) => {
+                    localState.context.ClearTracked();
+                    localState.context.Links.Add(localState.link);
+                    await localState.context.SaveChangesAsync(c).ConfigureAwait(false);
+                    await localState.kafka.ProduceNewLink(localState.link, CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }, cancellationToken: token).ConfigureAwait(false);
             }
             catch (DbUpdateException e)
             {
@@ -76,6 +87,11 @@ namespace Rinkudesu.Services.Links.Repositories
                     throw new DataAlreadyExistsException(link.Id);
                 }
                 _logger.LogWarning(e, "Unexpected error occured while adding a new link to the database");
+                throw;
+            }
+            catch (KafkaProduceException e)
+            {
+                _logger.LogWarning(e, "Failed to publish link creation kafka message");
                 throw;
             }
         }
@@ -105,8 +121,14 @@ namespace Rinkudesu.Services.Links.Repositories
                 _logger.LogInformation($"Link '{linkId}' was unable to be found for user '{deletingUserId}'");
                 throw new DataNotFoundException(linkId);
             }
-            _context.Links.Remove(link);
-            await _context.SaveChangesAsync(token).ConfigureAwait(false);
+            var state = new { context = _context, kafka = _kafkaProducer, link };
+            _ = await _context.ExecuteInTransaction(state, async (localState, c) => {
+                localState.context.ClearTracked();
+                localState.context.Remove(localState.link);
+                await localState.context.SaveChangesAsync(c).ConfigureAwait(false);
+                await localState.kafka.ProduceDeletedLink(localState.link, CancellationToken.None).ConfigureAwait(false);
+                return true;
+            }, cancellationToken: token).ConfigureAwait(false);
         }
     }
 }

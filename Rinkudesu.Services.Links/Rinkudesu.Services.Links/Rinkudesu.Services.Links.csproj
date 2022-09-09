@@ -48,6 +48,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Rinkudesu.Services.Links.HealthChecks\Rinkudesu.Services.Links.HealthChecks.csproj" />
+      <ProjectReference Include="..\Rinkudesu.Services.Links.MessageQueues\Rinkudesu.Services.Links.MessageQueues.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Models\Rinkudesu.Services.Links.Models.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Repositories\Rinkudesu.Services.Links.Repositories.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Utilities\Rinkudesu.Services.Links.Utilities.csproj" />

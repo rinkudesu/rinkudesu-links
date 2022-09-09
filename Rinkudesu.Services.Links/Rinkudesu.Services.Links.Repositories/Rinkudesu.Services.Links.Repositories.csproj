@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Rinkudesu.Services.Links.Data\Rinkudesu.Services.Links.Data.csproj" />
+      <ProjectReference Include="..\Rinkudesu.Services.Links.MessageQueues\Rinkudesu.Services.Links.MessageQueues.csproj" />
       <ProjectReference Include="..\Rinkudesu.Services.Links.Models\Rinkudesu.Services.Links.Models.csproj" />
     </ItemGroup>
 

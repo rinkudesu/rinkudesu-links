@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Rinkudesu.Kafka.Dotnet;
+using Rinkudesu.Kafka.Dotnet.Base;
 using Rinkudesu.Services.Links;
 using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.DataTransferObjects;
@@ -100,6 +102,7 @@ return 0;
 
 void ConfigureServices(IServiceCollection services)
 {
+    SetupKafka(services);
     services.AddScoped<ILinkRepository, LinkRepository>();
     services.AddAutoMapper(typeof(LinkMappingProfile));
     services.AddScoped<ISharedLinkRepository, SharedLinkRepository>();
@@ -192,4 +195,11 @@ static void ApplyMigrations(IApplicationBuilder app)
     using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
     using var context = scope.ServiceProvider.GetRequiredService<LinkDbContext>();
     context.Database.Migrate();
+}
+
+static void SetupKafka(IServiceCollection serviceCollection)
+{
+    var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
+    serviceCollection.AddSingleton(kafkaConfig);
+    serviceCollection.AddSingleton<IKafkaProducer, KafkaProducer>();
 }

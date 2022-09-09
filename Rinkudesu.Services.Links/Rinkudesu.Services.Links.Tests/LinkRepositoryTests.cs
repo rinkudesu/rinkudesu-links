@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Rinkudesu.Kafka.Dotnet.Base;
+using Rinkudesu.Kafka.Dotnet.Exceptions;
+using Rinkudesu.Services.Links.MessageQueues.Messages;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
@@ -14,6 +19,12 @@ namespace Rinkudesu.Services.Links.Tests
     public class LinkRepositoryTests : ContextTests
     {
         private static readonly Guid _userId = Guid.NewGuid();
+        private readonly Mock<IKafkaProducer> _mockKafkaHandler = new();
+
+        public LinkRepositoryTests()
+        {
+            _mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        }
 
         private List<Link> links = new List<Link>();
         private async Task PopulateLinksAsync()
@@ -33,7 +44,7 @@ namespace Rinkudesu.Services.Links.Tests
 
         private LinkRepository CreateRepository()
         {
-            return new LinkRepository(_context, new NullLogger<LinkRepository>());
+            return new LinkRepository(_context, new NullLogger<LinkRepository>(), _mockKafkaHandler.Object);
         }
 
         [Fact]
@@ -241,6 +252,33 @@ namespace Rinkudesu.Services.Links.Tests
             var result = await repo.GetLinkByKeyAsync("test");
 
             Assert.Equal("test", result.ShareableKey);
+        }
+
+        [Fact]
+        public async Task LinkRepositoryCreateLink_NewLinkQueuePublishFails_LinkNotAdded()
+        {
+            _mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).ThrowsAsync(new KafkaProduceException());
+            var repo = CreateRepository();
+            var link = new Link();
+
+            await Assert.ThrowsAsync<KafkaProduceException>(() => repo.CreateLinkAsync(link));
+
+            Assert.Empty(_context.Links);
+        }
+
+        [Fact]
+        public async Task LinkRepositoryDeleteLink_DeleteExistingLinkWithValidUserIdFailedToPublishToKafka_LinkNotDeleted()
+        {
+            await PopulateLinksAsync();
+            _mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).ThrowsAsync(new KafkaProduceException());
+            var repo = CreateRepository();
+            var link = links.First(l => l.CreatingUserId == _userId);
+            _context.ClearTracked();
+
+            await Assert.ThrowsAsync<KafkaProduceException>(() => repo.DeleteLinkAsync(link.Id, _userId));
+
+            var dbLink = await _context.Links.FindAsync(link.Id);
+            Assert.NotNull(dbLink);
         }
     }
 }
