@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rinkudesu.Kafka.Dotnet.Base;
+using Rinkudesu.Kafka.Dotnet.Exceptions;
 using Rinkudesu.Services.Links.Data;
 using Rinkudesu.Services.Links.MessageQueues;
 using Rinkudesu.Services.Links.Models;
@@ -67,12 +68,16 @@ namespace Rinkudesu.Services.Links.Repositories
         {
             _logger.LogDebug($"Executing {nameof(CreateLinkAsync)} with link: '{link}'");
             link.SetCreateDates();
-            _context.Links.Add(link);
             try
             {
-                await _context.SaveChangesAsync(token).ConfigureAwait(false);
-                //todo: come up with a way to handle the next line failing (remove stuff from database?)
-                await _kafkaProducer.ProduceNewLink(link, CancellationToken.None);
+                var state = new { context = _context, kafka = _kafkaProducer, link };
+                _ = await _context.ExecuteInTransaction(state, async (localState, c) => {
+                    localState.context.ClearTracked();
+                    localState.context.Links.Add(localState.link);
+                    await localState.context.SaveChangesAsync(c).ConfigureAwait(false);
+                    await localState.kafka.ProduceNewLink(localState.link, CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }, cancellationToken: token).ConfigureAwait(false);
             }
             catch (DbUpdateException e)
             {
@@ -82,6 +87,11 @@ namespace Rinkudesu.Services.Links.Repositories
                     throw new DataAlreadyExistsException(link.Id);
                 }
                 _logger.LogWarning(e, "Unexpected error occured while adding a new link to the database");
+                throw;
+            }
+            catch (KafkaProduceException e)
+            {
+                _logger.LogWarning(e, "Failed to publish link creation kafka message");
                 throw;
             }
         }
