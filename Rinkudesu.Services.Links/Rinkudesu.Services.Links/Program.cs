@@ -80,12 +80,6 @@ try
             .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName)
             .Enrich.WithExceptionDetails();
     });
-    builder.WebHost
-        .UseKestrel((context, serverOptions) => {
-            serverOptions.ConfigureHttpsDefaults(https => {
-                https.ServerCertificate = new X509Certificate2("cert.pfx");
-            });
-        });
 
     var app = builder.Build();
     Configure(app, app.Environment);
