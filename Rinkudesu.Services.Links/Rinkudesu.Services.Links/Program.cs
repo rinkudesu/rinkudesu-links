@@ -34,6 +34,7 @@ using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 #pragma warning disable 1591
 #pragma warning disable CA1812
+#pragma warning disable CA1305
 
 // Migrations adding is behaving in a rather bizarre way.
 // This line is required to fix some arguments being passed to this program
