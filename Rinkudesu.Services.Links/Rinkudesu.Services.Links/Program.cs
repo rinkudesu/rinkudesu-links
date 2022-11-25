@@ -134,9 +134,7 @@ void ConfigureServices(IServiceCollection services)
         })
         .AddJwtBearer(options => {
             options.Authority = Environment.GetEnvironmentVariable("RINKUDESU_AUTHORITY");
-#if DEBUG
-            options.RequireHttpsMetadata = false;
-#endif
+            options.RequireHttpsMetadata = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RINKUDESU_AUTHORITY_ALLOW_HTTP"));
             options.Audience = "rinkudesu";
         });
 
