@@ -12,6 +12,7 @@
         <Company>Rinkudesu</Company>
         <LangVersion>default</LangVersion>
         <AnalysisMode>All</AnalysisMode>
+        <Version>v0.3.0</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
