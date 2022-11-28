@@ -12,7 +12,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Rinkudesu.Kafka.Dotnet" Version="0.0.1" />
+        <PackageReference Include="Rinkudesu.Kafka.Dotnet" Version="0.0.2" />
     </ItemGroup>
     
     <ItemGroup>
