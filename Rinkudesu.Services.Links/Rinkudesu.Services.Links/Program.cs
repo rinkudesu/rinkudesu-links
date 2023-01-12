@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -18,6 +19,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
+using Rinkudesu.Gateways.Utils;
 using Rinkudesu.Kafka.Dotnet;
 using Rinkudesu.Kafka.Dotnet.Base;
 using Rinkudesu.Services.Links;
@@ -28,6 +32,7 @@ using Rinkudesu.Services.Links.HostedServices;
 using Rinkudesu.Services.Links.MessageHandlers;
 using Rinkudesu.Services.Links.MessageQueues.Messages;
 using Rinkudesu.Services.Links.Repositories;
+using Rinkudesu.Services.Links.Repositories.Clients;
 using Rinkudesu.Services.Links.Utilities;
 using Serilog;
 using Serilog.Exceptions;
@@ -157,6 +162,8 @@ void ConfigureServices(IServiceCollection services)
         c.IncludeXmlComments(Path.Combine(xmlPath, xmlName));
     });
 
+    SetupClients(services);
+
     services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("Database health check");
 }
 
@@ -203,4 +210,18 @@ static void SetupKafka(IServiceCollection serviceCollection)
     var kafkaConfig = KafkaConfigurationProvider.ReadFromEnv();
     serviceCollection.AddSingleton(kafkaConfig);
     serviceCollection.AddSingleton<IKafkaProducer, KafkaProducer>();
+}
+
+static void SetupClients(IServiceCollection serviceCollection)
+{
+    var tagsUrl = Environment.GetEnvironmentVariable("RINKUDESU_TAGS") ?? throw new InvalidOperationException("RUNKUDESU_TAGS env variable pointing to tags microservice must be set");
+    serviceCollection.AddHttpClient<TagsClient>(o => {
+        o.BaseAddress = tagsUrl.ToUri();
+    }).AddPolicyHandler(GetRetryPolicy());
+}
+
+ static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions.HandleTransientHttpError()
+        .WaitAndRetryAsync(5, attempt => TimeSpan.FromSeconds(attempt));
 }

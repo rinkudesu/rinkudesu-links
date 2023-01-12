@@ -17,9 +17,10 @@ namespace Rinkudesu.Services.Links.Repositories
         /// Returns an enumerable of all links filtered by the provided query model
         /// </summary>
         /// <param name="queryModel">A query filter for the list</param>
+        /// <param name="idsLimit"></param>
         /// <param name="token">Token to cancel async operation</param>
         /// <returns>Awaitable enumerable containing filtered links</returns>
-        Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, CancellationToken token = default);
+        Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, IEnumerable<Guid>? idsLimit = null, CancellationToken token = default);
 
         /// <summary>
         /// Returns a single link

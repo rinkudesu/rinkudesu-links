@@ -14,7 +14,8 @@
         "RINKU_LINKS_CONNECTIONSTRING": "Server=127.0.0.1;Port=5432;Database=rinku-links;User Id=postgres;Password=postgres;",
         "RINKU_KAFKA_ADDRESS": "localhost:9092",
         "RINKU_KAFKA_CLIENT_ID": "rinkudesu-links",
-        "RINKU_KAFKA_CONSUMER_GROUP_ID": "rinkudesu-links"
+        "RINKU_KAFKA_CONSUMER_GROUP_ID": "rinkudesu-links",
+        "RINKUDESU_TAGS": "http://localhost:5010/api/v0/"
       }
     }
   }

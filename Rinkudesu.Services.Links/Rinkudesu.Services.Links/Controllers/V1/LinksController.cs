@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Rinkudesu.Services.Links.DataTransferObjects.V1;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
+using Rinkudesu.Services.Links.Repositories.Clients;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
 using Rinkudesu.Services.Links.Utilities;
@@ -42,15 +44,32 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         /// <summary>
         /// Gets a complete list of available links to which the user has access
         /// </summary>
-        /// <param name="queryModel"></param>
         /// <returns>List of links</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel, [FromServices] TagsClient tagsClient)
         {
             using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
             queryModel.UserId = User.GetIdAsGuid();
-            var links = await _repository.GetAllLinksAsync(queryModel).ConfigureAwait(false);
+            List<Guid>? byTag = null;
+
+            if (queryModel.TagIds is { Length: > 0 })
+            {
+                tagsClient.SetAccessToken(await HttpContext.GetJwt());
+                byTag = new();
+                foreach (var tagId in queryModel.TagIds)
+                {
+                    var linkIds = await tagsClient.GetLinkIdsForTag(tagId);
+                    if (linkIds is null)
+                    {
+                        return BadRequest();
+                    }
+                    byTag.AddRange(linkIds.Select(l => l.Id));
+                }
+            }
+
+            var links = await _repository.GetAllLinksAsync(queryModel, byTag?.Distinct()).ConfigureAwait(false);
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }
 

@@ -21,6 +21,7 @@ services:
       RINKU_KAFKA_ADDRESS: "<hostname-of-kafka>:9092"
       RINKU_KAFKA_CLIENT_ID: "rinkudesu-links"
       RINKU_KAFKA_CONSUMER_GROUP_ID: "rinkudesu-links"
+      RINKUDESU_TAGS: "http://<host-of-tags-microservice>/api/v0/"
 #      ASPNETCORE_URLS: "http://0.0.0.0:80;https://0.0.0.0:443"
 #    volumes:
 #      - ./cert.pfx:/app/cert.pfx:ro
