@@ -20,6 +20,7 @@ services:
     environment:
       RINKU_LINKS_CONNECTIONSTRING: "Server=postgres;Port=5432;Database=rinku-links;User Id=postgres;Password=postgres;"
       RINKUDESU_AUTHORITY: "https://<hostname-of-keycloak-instance>/realms/rinkudesu"
+      RINKUDESU_TAGS: "http://<host-of-tags-microservice>/api/v0/"
     command:
       - "--applyMigrations"
       - "-l 0"
