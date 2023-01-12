@@ -16,12 +16,12 @@ namespace Rinkudesu.Services.Links.Tests
         {
             links = new List<Link>
             {
-                new Link(),
-                new Link { LinkUrl = "http://localhost/" },
-                new Link { Title = "ayaya" },
-                new Link { Description = "tuturu*" },
-                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
-                new Link { CreatingUserId = _userId }
+                new Link{Id = Guid.NewGuid()},
+                new Link { Id = Guid.NewGuid(), LinkUrl = "http://localhost/" },
+                new Link { Id = Guid.NewGuid(), Title = "ayaya" },
+                new Link { Id = Guid.NewGuid(), Description = "tuturu*" },
+                new Link { Id = Guid.NewGuid(), PrivacyOptions = Link.LinkPrivacyOptions.Public },
+                new Link { Id = Guid.NewGuid(), CreatingUserId = _userId }
             };
         }
 
@@ -372,6 +372,36 @@ namespace Rinkudesu.Services.Links.Tests
             for (int i = 0; i < testLinks.Count; i++)
             {
                 Assert.Equal(sortedLinks[i].Id, result[i].Id);
+            }
+        }
+
+        [Fact]
+        public void LinkListQueryModelFilterByIds_IdsLimitProvided_Filters()
+        {
+            PopulateLinks();
+            var model = new LinkListQueryModel
+            {
+                IdsLimit = new[] { links.Last().Id }
+            };
+
+            var result = model.FilterById(links.AsQueryable());
+
+            Assert.Single(result);
+            Assert.Equal(links.Last().Id, result.Single().Id);
+        }
+
+        [Fact]
+        public void LinkListQueryModelFilterByIds_NoIdsProvided_ReturnsOriginalCollection()
+        {
+            PopulateLinks();
+            var model = new LinkListQueryModel();
+
+            var result = model.FilterById(links.AsQueryable());
+
+            Assert.Equal(links.Count, result.Count());
+            foreach (var link in links)
+            {
+                Assert.Contains(result, l => l.Id == link.Id);
             }
         }
     }

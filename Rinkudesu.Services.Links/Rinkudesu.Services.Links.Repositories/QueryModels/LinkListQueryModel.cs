@@ -36,6 +36,14 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         /// Selects the sort order for the list
         /// </summary>
         public LinkListSortOptions SortOptions { get; set; }
+        /// <summary>
+        /// Limits the results to only the provided ids.
+        /// </summary>
+        /// <remarks>
+        /// May be used, for instance, when filtering links by tags.
+        /// </remarks>
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
+        public Guid[]? IdsLimit { get; set; }
 
         public IQueryable<Link> ApplyQueryModel(IQueryable<Link> links)
         {
@@ -45,6 +53,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             links = FilterTitleContains(links);
             links = FilterVisibility(links);
             links = SortLinks(links);
+            links = FilterById(links);
             return links;
         }
 
@@ -56,6 +65,15 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             {
                 ShowPrivate = false;
             }
+        }
+
+        public IQueryable<Link> FilterById(IQueryable<Link> links)
+        {
+            if (IdsLimit is { Length: > 0 })
+            {
+                return links.Where(l => IdsLimit.Contains(l.Id));
+            }
+            return links;
         }
 
         public IQueryable<Link> FilterUserId(IQueryable<Link> links)
