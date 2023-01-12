@@ -50,6 +50,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         {
             using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
             queryModel.UserId = User.GetIdAsGuid();
+            //todo: limit by ids from tags controller
             var links = await _repository.GetAllLinksAsync(queryModel).ConfigureAwait(false);
             return Ok(_mapper.Map<IEnumerable<LinkDto>>(links));
         }

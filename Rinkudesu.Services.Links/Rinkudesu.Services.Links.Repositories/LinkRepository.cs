@@ -28,10 +28,10 @@ namespace Rinkudesu.Services.Links.Repositories
             _kafkaProducer = kafkaProducer;
         }
 
-        public async Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, CancellationToken token = default)
+        public async Task<IEnumerable<Link>> GetAllLinksAsync(LinkListQueryModel queryModel, IEnumerable<Guid>? idsLimit = null, CancellationToken token = default)
         {
             _logger.LogDebug($"Executing {nameof(GetAllLinksAsync)} with query model: {queryModel}");
-            return await queryModel.ApplyQueryModel(_context.Links).ToListAsync(token).ConfigureAwait(false);
+            return await queryModel.ApplyQueryModel(_context.Links, idsLimit).ToListAsync(token).ConfigureAwait(false);
         }
 
         public async Task<Link> GetLinkByKeyAsync(string key, CancellationToken token = default)

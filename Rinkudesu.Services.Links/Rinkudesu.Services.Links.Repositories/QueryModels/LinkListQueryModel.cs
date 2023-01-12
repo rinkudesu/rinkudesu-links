@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Rinkudesu.Services.Links.Models;
@@ -36,8 +37,17 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         /// Selects the sort order for the list
         /// </summary>
         public LinkListSortOptions SortOptions { get; set; }
+        /// <summary>
+        /// Limits returned links by applied tags.
+        /// </summary>
+        /// <remarks>
+        /// This filter should be used independently first and then the resulting ids should be passed to <see cref="ApplyQueryModel"/>.
+        /// If the user selects multiple tags, the result should be a sum of all links with any of those tags.
+        /// </remarks>
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
+        public Guid[]? TagIds { get; set; }
 
-        public IQueryable<Link> ApplyQueryModel(IQueryable<Link> links)
+        public IQueryable<Link> ApplyQueryModel(IQueryable<Link> links, IEnumerable<Guid>? idsLimit = null)
         {
             SanitizeModel();
             links = FilterUserId(links);
@@ -45,6 +55,12 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             links = FilterTitleContains(links);
             links = FilterVisibility(links);
             links = SortLinks(links);
+
+            if (idsLimit is not null)
+            {
+                links = links.Where(l => idsLimit.Contains(l.Id));
+            }
+
             return links;
         }
 
