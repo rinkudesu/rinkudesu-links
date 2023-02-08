@@ -51,6 +51,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         public async Task<ActionResult<IEnumerable<LinkDto>>> Get([FromQuery] LinkListQueryModel queryModel, [FromServices] TagsClient tagsClient)
         {
             using var scope = _logger.BeginScope("Requesting all links with query {queryModel}", queryModel);
+            if (!ModelState.IsValid) return BadRequest();
             queryModel.UserId = User.GetIdAsGuid();
             List<Guid>? byTag = null;
 
