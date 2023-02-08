@@ -251,7 +251,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderBy(l => l.Title).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -266,7 +266,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderByDescending(l => l.Title).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -281,7 +281,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderBy(l => l.LinkUrl).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -296,7 +296,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderByDescending(l => l.LinkUrl).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -311,7 +311,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderBy(l => l.CreationDate).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -326,7 +326,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderByDescending(l => l.CreationDate).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -341,7 +341,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderBy(l => l.LastUpdate).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -356,7 +356,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderByDescending(l => l.LastUpdate).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
 
@@ -371,7 +371,7 @@ namespace Rinkudesu.Services.Links.Tests
             var sortedLinks = testLinks.OrderBy(l => l.Id).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
-                Assert.Equal(sortedLinks[i].Id, result[i].Id);
+                Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
     }
