@@ -374,5 +374,22 @@ namespace Rinkudesu.Services.Links.Tests
                 Assert.Equal(sortedLinks[i].Title, result[i].Title);
             }
         }
+
+        [Fact]
+        public void LinkListQueryModelSkipTake_ValuesProvided_ReturnedCorrectCollection()
+        {
+            var testLinks = GetSortTestLinks();
+            var model = new LinkListQueryModel { Skip = 1, Take = 2 };
+
+            var result = model.SkipTake(testLinks.OrderBy(l => l.Title).AsQueryable()).ToList();
+
+            var sortedLinks = testLinks.OrderBy(l => l.Title).ToList();
+            Assert.DoesNotContain(result, l => l.Title == sortedLinks[0].Title);
+            Assert.Equal(2, result.Count);
+            for (int i = 1; i < 3; i++)
+            {
+                Assert.Equal(sortedLinks[i].Title, result[i - 1].Title);
+            }
+        }
     }
 }

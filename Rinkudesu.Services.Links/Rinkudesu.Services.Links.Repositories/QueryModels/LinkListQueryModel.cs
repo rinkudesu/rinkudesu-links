@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Rinkudesu.Services.Links.Models;
@@ -47,6 +48,11 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
         public Guid[]? TagIds { get; set; }
 
+        [Range(0, int.MaxValue)]
+        public int? Skip { get; set; }
+        [Range(0, int.MaxValue)]
+        public int? Take { get; set; }
+
         public IQueryable<Link> ApplyQueryModel(IQueryable<Link> links, IEnumerable<Guid>? idsLimit = null)
         {
             SanitizeModel();
@@ -54,6 +60,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             links = FilterUrlContains(links);
             links = FilterTitleContains(links);
             links = FilterVisibility(links);
+            links = SkipTake(links);
             links = SortLinks(links);
 
             if (idsLimit is not null)
@@ -110,6 +117,19 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             if (!ShowPublic)
             {
                 links = links.Where(l => l.PrivacyOptions != Link.LinkPrivacyOptions.Public);
+            }
+            return links;
+        }
+
+        public IQueryable<Link> SkipTake(IQueryable<Link> links)
+        {
+            if (Skip.HasValue)
+            {
+                links = links.Skip(Skip.Value);
+            }
+            if (Take.HasValue)
+            {
+                links = links.Take(Take.Value);
             }
             return links;
         }
