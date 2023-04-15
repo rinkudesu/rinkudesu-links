@@ -33,12 +33,12 @@ namespace Rinkudesu.Services.Links.Tests
         {
             links = new List<Link>
             {
-                new Link { CreatingUserId = _userId },
+                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() },
                 new Link { LinkUrl = "http://localhost/", CreatingUserId = _userId },
-                new Link { Title = "ayaya", ShareableKey = "test", CreatingUserId = _userId },
-                new Link { Description = "tuturu*", CreatingUserId = Guid.NewGuid() },
-                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, CreatingUserId = Guid.NewGuid() },
-                new Link { CreatingUserId = _userId }
+                new Link { Title = "ayaya", ShareableKey = "test", CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() },
+                new Link { Description = "tuturu*", CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
+                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
+                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() }
             };
             _context.Links.AddRange(links);
             await _context.SaveChangesAsync();
