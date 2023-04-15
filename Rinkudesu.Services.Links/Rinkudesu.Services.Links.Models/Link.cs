@@ -3,11 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 using Rinkudesu.Services.Links.Utilities;
 
 namespace Rinkudesu.Services.Links.Models
 {
     [ExcludeFromCodeCoverage]
+    [Index(nameof(LinkUrl), nameof(CreatingUserId), IsUnique = true)]
     public class Link
     {
         [Key]

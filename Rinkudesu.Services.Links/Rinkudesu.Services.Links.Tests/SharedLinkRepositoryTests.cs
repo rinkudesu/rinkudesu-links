@@ -125,9 +125,9 @@ public class SharedLinkRepositoryTests : ContextTests
 
     private List<Link> GetLinks() => new()
     {
-        new() { CreatingUserId = _userInfo.UserId },
-        new() { CreatingUserId = _userInfo.UserId, ShareableKey = "test" },
-        new() { CreatingUserId = Guid.NewGuid() },
-        new() { CreatingUserId = Guid.NewGuid(), ShareableKey = "test" },
+        new() { CreatingUserId = _userInfo.UserId, LinkUrl = Guid.NewGuid().ToString() },
+        new() { CreatingUserId = _userInfo.UserId, ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString() },
+        new() { CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
+        new() { CreatingUserId = Guid.NewGuid(), ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString() },
     };
 }
