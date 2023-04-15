@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Rinkudesu.Services.Links.Data;
@@ -11,9 +12,11 @@ using Rinkudesu.Services.Links.Data;
 namespace Rinkudesu.Services.Links.Migrations
 {
     [DbContext(typeof(LinkDbContext))]
-    partial class LinkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230415192012_AddUniqueUrlIndexForUser")]
+    partial class AddUniqueUrlIndexForUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
