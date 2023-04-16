@@ -60,8 +60,8 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
             links = FilterUrlContains(links);
             links = FilterTitleContains(links);
             links = FilterVisibility(links);
-            links = SkipTake(links);
             links = SortLinks(links);
+            links = SkipTake(links);
 
             if (idsLimit is not null)
             {

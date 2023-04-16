@@ -15,10 +15,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Polly;
 using Polly.Extensions.Http;
 using Rinkudesu.Gateways.Utils;
@@ -122,6 +124,7 @@ void ConfigureServices(IServiceCollection services)
                 providerOptions.EnableRetryOnFailure();
                 providerOptions.MigrationsAssembly("Rinkudesu.Services.Links");
             });
+        options.ConfigureWarnings(w => w.Throw(CoreEventId.RowLimitingOperationWithoutOrderByWarning).Throw(CoreEventId.FirstWithoutOrderByAndFilterWarning).Throw(CoreEventId.DistinctAfterOrderByWithoutRowLimitingOperatorWarning));
 #if DEBUG
         options.EnableSensitiveDataLogging();
 #endif
