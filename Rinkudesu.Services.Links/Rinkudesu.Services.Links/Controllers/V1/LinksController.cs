@@ -126,7 +126,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         /// <param name="newLink"></param>
         /// <remarks>Note that id, creating user id, creation date and update date fields will be ignored, even if they are included in the request</remarks>
         /// <returns>Newly created link object</returns>
-        /// <response code="400">When object validation failed or the object already exists in the database</response>
+        /// <response code="400">When object validation failed or the object already exists in the database. If the link already exists, the phrase "Link already exists" will be returned.</response>
         /// <response code="201">When the object was created correctly</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -147,7 +147,7 @@ namespace Rinkudesu.Services.Links.Controllers.V1
             }
             catch (DataAlreadyExistsException)
             {
-                return BadRequest();
+                return BadRequest("Link already exists");
             }
         }
 
