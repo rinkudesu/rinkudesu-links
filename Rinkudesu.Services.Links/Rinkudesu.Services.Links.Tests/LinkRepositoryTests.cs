@@ -111,12 +111,12 @@ namespace Rinkudesu.Services.Links.Tests
         }
 
         [Fact]
-        public async Task LinkRepositoryCreateLink_NewLinkWithDuplicateId_DataAlreadyExistsThrown()
+        public async Task LinkRepositoryCreateLink_NewLinkWithDuplicateData_DataAlreadyExistsThrown()
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
             _context.ClearTracked();
-            var link = new Link { Id = links.First().Id };
+            var link = new Link { LinkUrl = links.First().LinkUrl, CreatingUserId = links.First().CreatingUserId };
 
             await Assert.ThrowsAsync<DataAlreadyExistsException>(() => repo.CreateLinkAsync(link));
         }

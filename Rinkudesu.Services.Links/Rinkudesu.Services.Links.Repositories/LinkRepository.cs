@@ -81,9 +81,9 @@ namespace Rinkudesu.Services.Links.Repositories
             }
             catch (DbUpdateException e)
             {
-                if (_context.Links.Any(l => l.Id == link.Id))
+                if (_context.Links.Any(l => l.LinkUrl == link.LinkUrl && l.CreatingUserId == link.CreatingUserId))
                 {
-                    _logger.LogWarning(e, "Link with id '{linkId}' already exists in the database", link.Id);
+                    _logger.LogWarning(e, "Link with with url '{url}' for user '{userId}' already exists in the database", link.LinkUrl, link.CreatingUserId.ToString());
                     throw new DataAlreadyExistsException(link.Id);
                 }
                 _logger.LogWarning(e, "Unexpected error occured while adding a new link to the database");
