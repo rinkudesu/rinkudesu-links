@@ -16,6 +16,7 @@ namespace Rinkudesu.Services.Links.DataTransferObjects.V1
         /// </summary>
         [DataType(DataType.Url)]
         [MaxLength(200)]
+        [SuppressMessage("Design", "CA1056:URI-like properties should not be strings")]
         public string LinkUrl { get; set; } = null!;
         /// <summary>
         /// Title of the link
