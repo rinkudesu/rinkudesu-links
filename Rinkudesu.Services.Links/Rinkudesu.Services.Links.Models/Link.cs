@@ -18,7 +18,7 @@ namespace Rinkudesu.Services.Links.Models
         [DataType(DataType.Url)]
         [Required]
         [MaxLength(200)]
-        public Uri LinkUrl { get; set; }
+        public Uri LinkUrl { get; set; } = null!;
         /// <summary>
         /// This field can be safely used to filter and sort links.
         /// </summary>
@@ -26,6 +26,7 @@ namespace Rinkudesu.Services.Links.Models
         /// Please note that this field is set by the database, so it will not have a value before it's saved and then retrieved.
         /// </remarks>
         [MaxLength(200)]
+        [SuppressMessage("Design", "CA1056:URI-like properties should not be strings")]
         public string SearchableUrl { get; private set; } = null!;
         [Required]
         [DataType(DataType.Text)]

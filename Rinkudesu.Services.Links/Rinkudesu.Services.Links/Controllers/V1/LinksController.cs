@@ -131,15 +131,14 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<LinkDto>> Create([FromBody] LinkDto newLink)
+        public async Task<ActionResult<LinkDto>> Create([FromBody] LinkCreateDto newLink)
         {
+            if (!ModelState.IsValid || !newLink.IsLinkUrlValid())
+                return BadRequest();
+
             using var scope = _logger.BeginScope("Creating a link {link}", newLink);
             var link = _mapper.Map<Link>(newLink);
             link.CreatingUserId = User.GetIdAsGuid();
-            if (!TryValidateModel(link))
-            {
-                return BadRequest();
-            }
             try
             {
                 await _repository.CreateLinkAsync(link).ConfigureAwait(false);
