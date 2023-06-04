@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Rinkudesu.Gateways.Utils;
 using Rinkudesu.Kafka.Dotnet.Base;
 using Rinkudesu.Kafka.Dotnet.Exceptions;
 using Rinkudesu.Services.Links.MessageQueues.Messages;
@@ -33,12 +34,12 @@ namespace Rinkudesu.Services.Links.Tests
         {
             links = new List<Link>
             {
-                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() },
-                new Link { LinkUrl = "http://localhost/", CreatingUserId = _userId },
-                new Link { Title = "ayaya", ShareableKey = "test", CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() },
-                new Link { Description = "tuturu*", CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
-                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
-                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString() }
+                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { LinkUrl = "http://localhost/".ToUri(), CreatingUserId = _userId },
+                new Link { Title = "ayaya", ShareableKey = "test", CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { Description = "tuturu*", CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString().ToUri() }
             };
             _context.Links.AddRange(links);
             await _context.SaveChangesAsync();
@@ -103,7 +104,7 @@ namespace Rinkudesu.Services.Links.Tests
         {
             await PopulateLinksAsync();
             var repo = CreateRepository();
-            var link = new Link();
+            var link = new Link { LinkUrl = "http://localhost/".ToUri() };
 
             await repo.CreateLinkAsync(link);
 
@@ -131,6 +132,7 @@ namespace Rinkudesu.Services.Links.Tests
             {
                 Id = link.Id,
                 Description = "test",
+                LinkUrl = Guid.NewGuid().ToString().ToUri(),
                 CreatingUserId = _userId //TODO: remove this assignment as this should not be changeable here
             };
             _context.ClearTracked();
@@ -209,7 +211,7 @@ namespace Rinkudesu.Services.Links.Tests
         public async Task CreateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
         {
             var repo = CreateRepository();
-            var link = new Link { CreationDate = DateTime.MinValue, LastUpdate = DateTime.MaxValue };
+            var link = new Link { CreationDate = DateTime.MinValue, LastUpdate = DateTime.MaxValue, LinkUrl = "http://localhost/".ToUri() };
 
             await repo.CreateLinkAsync(link);
 
@@ -222,12 +224,12 @@ namespace Rinkudesu.Services.Links.Tests
         public async Task UpdateLink_CreationAndUpdateDatesSet_CustomValuesIgnored()
         {
             var userId = Guid.NewGuid();
-            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = userId });
+            _context.Links.Add(new Link { CreationDate = DateTime.MinValue, CreatingUserId = userId, LinkUrl = Guid.NewGuid().ToString().ToUri() });
             await _context.SaveChangesAsync();
             var id = _context.Links.First().Id;
             _context.ClearTracked();
             var repo = CreateRepository();
-            var link = new Link { Id = id, CreationDate = DateTime.MaxValue, LastUpdate = DateTime.MinValue };
+            var link = new Link { Id = id, CreationDate = DateTime.MaxValue, LastUpdate = DateTime.MinValue, LinkUrl = Guid.NewGuid().ToString().ToUri() };
 
             await repo.UpdateLinkAsync(link, userId);
 
@@ -261,7 +263,7 @@ namespace Rinkudesu.Services.Links.Tests
         {
             _mockKafkaHandler.Setup(k => k.Produce(It.IsAny<string>(), It.IsAny<LinkMessage>(), It.IsAny<CancellationToken>())).ThrowsAsync(new KafkaProduceException());
             var repo = CreateRepository();
-            var link = new Link();
+            var link = new Link { LinkUrl = "http://localhost/".ToUri() };
 
             await Assert.ThrowsAsync<KafkaProduceException>(() => repo.CreateLinkAsync(link));
 

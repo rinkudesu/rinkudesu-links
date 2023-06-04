@@ -17,9 +17,17 @@ namespace Rinkudesu.Services.Links.Models
         public Guid Id { get; set; }
         [DataType(DataType.Url)]
         [Required]
-        [SuppressMessage("Design", "CA1056", MessageId = "URI-like properties should not be strings")]
         [MaxLength(200)]
-        public string LinkUrl { get; set; }
+        public Uri LinkUrl { get; set; } = null!;
+        /// <summary>
+        /// This field can be safely used to filter and sort links.
+        /// </summary>
+        /// <remarks>
+        /// Please note that this field is set by the database, so it will not have a value before it's saved and then retrieved.
+        /// </remarks>
+        [MaxLength(200)]
+        [SuppressMessage("Design", "CA1056:URI-like properties should not be strings")]
+        public string SearchableUrl { get; private set; } = null!;
         [Required]
         [DataType(DataType.Text)]
         [MaxLength(250)]
@@ -40,7 +48,6 @@ namespace Rinkudesu.Services.Links.Models
         {
             CreationDate = DateTime.UtcNow;
             LastUpdate = CreationDate;
-            LinkUrl = string.Empty;
             Title = string.Empty;
             CreatingUserId = Guid.Empty;
         }

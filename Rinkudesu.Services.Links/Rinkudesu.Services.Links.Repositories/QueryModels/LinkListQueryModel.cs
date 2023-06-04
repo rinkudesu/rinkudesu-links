@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.Repositories.QueryModels
 {
-    public class LinkListQueryModel
+    public partial class LinkListQueryModel
     {
         /// <summary>
         /// UserId creating the link
@@ -94,7 +95,8 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             if (UrlContains != null)
             {
-                return links.Where(l => l.LinkUrl.Contains(UrlContains));
+                var actionUrlContains = HttpStartRegex().Replace(UrlContains, string.Empty).ToUpperInvariant();
+                return links.Where(l => l.SearchableUrl.Contains(actionUrlContains));
             }
             return links;
         }
@@ -141,8 +143,8 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
                     ? links.OrderByDescending(l => l.Title)
                     : links.OrderBy(l => l.Title),
                 LinkListSortOptions.Url => SortDescending
-                    ? links.OrderByDescending(l => l.LinkUrl)
-                    : links.OrderBy(l => l.LinkUrl),
+                    ? links.OrderByDescending(l => l.SearchableUrl)
+                    : links.OrderBy(l => l.SearchableUrl),
                 LinkListSortOptions.CreationDate => SortDescending
                     ? links.OrderByDescending(l => l.CreationDate)
                     : links.OrderBy(l => l.CreationDate),
@@ -156,6 +158,9 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             return System.Text.Json.JsonSerializer.Serialize(this);
         }
+
+        [GeneratedRegex("^https?://", RegexOptions.IgnoreCase, "en-PL")]
+        private static partial Regex HttpStartRegex();
     }
 
     public enum LinkListSortOptions

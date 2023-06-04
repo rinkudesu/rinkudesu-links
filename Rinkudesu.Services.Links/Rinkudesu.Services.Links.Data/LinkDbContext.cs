@@ -13,6 +13,12 @@ namespace Rinkudesu.Services.Links.Data
 
         public DbSet<Link> Links => Set<Link>();
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Link>().Property(l => l.SearchableUrl).HasComputedColumnSql(@"upper(regexp_replace(""LinkUrl"", '^https?:\/\/', ''))", stored: true);
+        }
+
         public void ClearTracked()
         {
             ChangeTracker.Clear();
