@@ -13,6 +13,11 @@ namespace Rinkudesu.Services.Links.DataTransferObjects
         {
             CreateMap<Link, LinkDto>();
             CreateMap<LinkCreateDto, Link>();
+            CreateMap<LinkDto, Link>()
+                .ForMember(m => m.Id, o => o.Ignore())
+                .ForMember(m => m.CreationDate, o => o.Ignore())
+                .ForMember(m => m.LastUpdate, o => o.Ignore())
+                .ForMember(m => m.CreatingUserId, o => o.Ignore());
         }
     }
 }
