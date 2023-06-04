@@ -12,7 +12,7 @@ namespace Rinkudesu.Services.Links.DataTransferObjects
     {
         public LinkMappingProfile()
         {
-            CreateMap<Link, LinkDto>().ForMember(m => m.LinkUrl, c => c.MapFrom(source => new Uri(source.LinkUrl, UriKind.RelativeOrAbsolute)));
+            CreateMap<Link, LinkDto>();
             CreateMap<LinkDto, Link>().ForMember(m => m.Id, options => options.Ignore())
                 .ForMember(m => m.CreationDate, options => options.Ignore())
                 .ForMember(m => m.LastUpdate, options => options.Ignore())

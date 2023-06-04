@@ -17,9 +17,8 @@ namespace Rinkudesu.Services.Links.Models
         public Guid Id { get; set; }
         [DataType(DataType.Url)]
         [Required]
-        [SuppressMessage("Design", "CA1056", MessageId = "URI-like properties should not be strings")]
         [MaxLength(200)]
-        public string LinkUrl { get; set; }
+        public Uri LinkUrl { get; set; }
         /// <summary>
         /// This field can be safely used to filter and sort links.
         /// </summary>
@@ -48,7 +47,6 @@ namespace Rinkudesu.Services.Links.Models
         {
             CreationDate = DateTime.UtcNow;
             LastUpdate = CreationDate;
-            LinkUrl = string.Empty;
             Title = string.Empty;
             CreatingUserId = Guid.Empty;
         }
