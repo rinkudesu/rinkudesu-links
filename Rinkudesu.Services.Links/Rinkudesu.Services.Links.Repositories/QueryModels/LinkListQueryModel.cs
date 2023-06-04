@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Rinkudesu.Services.Links.Models;
 
 namespace Rinkudesu.Services.Links.Repositories.QueryModels
 {
-    public class LinkListQueryModel
+    public partial class LinkListQueryModel
     {
         /// <summary>
         /// UserId creating the link
@@ -94,7 +95,8 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             if (UrlContains != null)
             {
-                return links.Where(l => l.SearchableUrl.Contains(UrlContains.ToUpperInvariant()));
+                var actionUrlContains = HttpStartRegex().Replace(UrlContains, string.Empty).ToUpperInvariant();
+                return links.Where(l => l.SearchableUrl.Contains(actionUrlContains));
             }
             return links;
         }
@@ -156,6 +158,9 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             return System.Text.Json.JsonSerializer.Serialize(this);
         }
+
+        [GeneratedRegex("^https?://", RegexOptions.IgnoreCase, "en-PL")]
+        private static partial Regex HttpStartRegex();
     }
 
     public enum LinkListSortOptions
