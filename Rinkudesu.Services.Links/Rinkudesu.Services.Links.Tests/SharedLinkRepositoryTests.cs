@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Rinkudesu.Gateways.Utils;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories;
 using Rinkudesu.Services.Links.Repositories.Exceptions;
@@ -125,9 +126,9 @@ public class SharedLinkRepositoryTests : ContextTests
 
     private List<Link> GetLinks() => new()
     {
-        new() { CreatingUserId = _userInfo.UserId, LinkUrl = Guid.NewGuid().ToString() },
-        new() { CreatingUserId = _userInfo.UserId, ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString() },
-        new() { CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString() },
-        new() { CreatingUserId = Guid.NewGuid(), ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString() },
+        new() { CreatingUserId = _userInfo.UserId, LinkUrl = Guid.NewGuid().ToString().ToUri() },
+        new() { CreatingUserId = _userInfo.UserId, ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString().ToUri() },
+        new() { CreatingUserId = Guid.NewGuid(), LinkUrl = Guid.NewGuid().ToString().ToUri() },
+        new() { CreatingUserId = Guid.NewGuid(), ShareableKey = "test", LinkUrl = Guid.NewGuid().ToString().ToUri() },
     };
 }

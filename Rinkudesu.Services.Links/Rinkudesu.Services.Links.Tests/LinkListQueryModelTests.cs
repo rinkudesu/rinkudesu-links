@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Rinkudesu.Gateways.Utils;
 using Rinkudesu.Services.Links.Models;
 using Rinkudesu.Services.Links.Repositories.QueryModels;
 using Xunit;
@@ -16,13 +18,17 @@ namespace Rinkudesu.Services.Links.Tests
         {
             links = new List<Link>
             {
-                new Link(),
-                new Link { LinkUrl = "http://localhost/" },
-                new Link { Title = "ayaya" },
-                new Link { Description = "tuturu*" },
-                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public },
-                new Link { CreatingUserId = _userId }
+                new Link { LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { LinkUrl = "http://localhost/".ToUri() },
+                new Link { Title = "ayaya", LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { Description = "tuturu*", LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { PrivacyOptions = Link.LinkPrivacyOptions.Public, LinkUrl = Guid.NewGuid().ToString().ToUri() },
+                new Link { CreatingUserId = _userId, LinkUrl = Guid.NewGuid().ToString().ToUri() },
             };
+            foreach (var link in links)
+            {
+                FillSearchableUrl(link);
+            }
         }
 
         [Fact]
@@ -130,7 +136,7 @@ namespace Rinkudesu.Services.Links.Tests
             var result = model.FilterUrlContains(links.AsQueryable());
 
             Assert.Single(result);
-            Assert.Contains(url, result.First().LinkUrl, StringComparison.InvariantCultureIgnoreCase);
+            Assert.Contains(url, result.First().LinkUrl.ToString(), StringComparison.InvariantCultureIgnoreCase);
         }
 
         [Fact]
@@ -215,27 +221,27 @@ namespace Rinkudesu.Services.Links.Tests
             {
                 new Link
                 {
-                    Title = "a", LinkUrl = "z", CreationDate = DateTime.Now.AddDays(-6),
+                    Title = "a", LinkUrl = "z".ToUri(), CreationDate = DateTime.Now.AddDays(-6),
                     LastUpdate = DateTime.Now.AddDays(-10)
                 },
                 new Link
                 {
-                    Title = "e", LinkUrl = "a", CreationDate = DateTime.Now.AddDays(-3),
+                    Title = "e", LinkUrl = "a".ToUri(), CreationDate = DateTime.Now.AddDays(-3),
                     LastUpdate = DateTime.Now.AddDays(-2)
                 },
                 new Link
                 {
-                    Title = "j", LinkUrl = "s", CreationDate = DateTime.Now.AddDays(-2),
+                    Title = "j", LinkUrl = "s".ToUri(), CreationDate = DateTime.Now.AddDays(-2),
                     LastUpdate = DateTime.Now.AddDays(-4)
                 },
                 new Link
                 {
-                    Title = "b", LinkUrl = "i", CreationDate = DateTime.Now.AddDays(-4),
+                    Title = "b", LinkUrl = "i".ToUri(), CreationDate = DateTime.Now.AddDays(-4),
                     LastUpdate = DateTime.Now.AddDays(-1)
                 },
                 new Link
                 {
-                    Title = "z", LinkUrl = "j", CreationDate = DateTime.Now.AddDays(-9), LastUpdate = DateTime.Now
+                    Title = "z", LinkUrl = "j".ToUri(), CreationDate = DateTime.Now.AddDays(-9), LastUpdate = DateTime.Now
                 },
             };
         }
@@ -278,7 +284,7 @@ namespace Rinkudesu.Services.Links.Tests
 
             var result = model.SortLinks(testLinks.AsQueryable()).ToList();
 
-            var sortedLinks = testLinks.OrderBy(l => l.LinkUrl).ToList();
+            var sortedLinks = testLinks.OrderBy(l => l.SearchableUrl).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
                 Assert.Equal(sortedLinks[i].Title, result[i].Title);
@@ -293,7 +299,7 @@ namespace Rinkudesu.Services.Links.Tests
 
             var result = model.SortLinks(testLinks.AsQueryable()).ToList();
 
-            var sortedLinks = testLinks.OrderByDescending(l => l.LinkUrl).ToList();
+            var sortedLinks = testLinks.OrderByDescending(l => l.SearchableUrl).ToList();
             for (int i = 0; i < testLinks.Count; i++)
             {
                 Assert.Equal(sortedLinks[i].Title, result[i].Title);
@@ -390,6 +396,13 @@ namespace Rinkudesu.Services.Links.Tests
             {
                 Assert.Equal(sortedLinks[i].Title, result[i - 1].Title);
             }
+        }
+
+        // this uses reflections as normally this would be set by the database and doing anything to allow this field to be set programmatically would be "tests only" anyway
+        private static void FillSearchableUrl(Link link)
+        {
+            var property = link.GetType().GetProperty(nameof(Link.SearchableUrl));
+            property!.SetValue(link, link.LinkUrl.ToString().Replace("https://", string.Empty).Replace("http://", string.Empty).ToUpperInvariant());
         }
     }
 }
