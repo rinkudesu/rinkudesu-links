@@ -20,6 +20,14 @@ namespace Rinkudesu.Services.Links.Models
         [SuppressMessage("Design", "CA1056", MessageId = "URI-like properties should not be strings")]
         [MaxLength(200)]
         public string LinkUrl { get; set; }
+        /// <summary>
+        /// This field can be safely used to filter and sort links.
+        /// </summary>
+        /// <remarks>
+        /// Please note that this field is set by the database, so it will not have a value before it's saved and then retrieved.
+        /// </remarks>
+        [MaxLength(200)]
+        public string SearchableUrl { get; private set; } = null!;
         [Required]
         [DataType(DataType.Text)]
         [MaxLength(250)]
