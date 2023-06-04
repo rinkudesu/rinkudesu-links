@@ -12,7 +12,7 @@ using Rinkudesu.Services.Links.Data;
 namespace Rinkudesu.Services.Links.Migrations
 {
     [DbContext(typeof(LinkDbContext))]
-    [Migration("20230604065225_StoreSearchableLinkUrl")]
+    [Migration("20230604072742_StoreSearchableLinkUrl")]
     partial class StoreSearchableLinkUrl
     {
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace Rinkudesu.Services.Links.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasComputedColumnSql("regexp_replace(\"LinkUrl\", '^https?:\\/\\/', '')", true);
+                        .HasComputedColumnSql("upper(regexp_replace(\"LinkUrl\", '^https?:\\/\\/', ''))", true);
 
                     b.Property<string>("ShareableKey")
                         .HasMaxLength(51)

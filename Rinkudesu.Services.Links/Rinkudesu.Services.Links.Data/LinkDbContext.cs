@@ -16,7 +16,7 @@ namespace Rinkudesu.Services.Links.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Link>().Property(l => l.SearchableUrl).HasComputedColumnSql(@"regexp_replace(""LinkUrl"", '^https?:\/\/', '')", stored: true);
+            modelBuilder.Entity<Link>().Property(l => l.SearchableUrl).HasComputedColumnSql(@"upper(regexp_replace(""LinkUrl"", '^https?:\/\/', ''))", stored: true);
         }
 
         public void ClearTracked()

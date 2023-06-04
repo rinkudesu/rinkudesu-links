@@ -16,7 +16,7 @@ namespace Rinkudesu.Services.Links.Migrations
                 type: "character varying(200)",
                 maxLength: 200,
                 nullable: false,
-                computedColumnSql: "regexp_replace(\"LinkUrl\", '^https?:\\/\\/', '')",
+                computedColumnSql: "upper(regexp_replace(\"LinkUrl\", '^https?:\\/\\/', ''))",
                 stored: true);
         }
 
