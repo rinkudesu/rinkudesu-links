@@ -94,7 +94,7 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
         {
             if (UrlContains != null)
             {
-                return links.Where(l => l.LinkUrl.Contains(UrlContains));
+                return links.Where(l => l.SearchableUrl.Contains(UrlContains.ToUpperInvariant()));
             }
             return links;
         }
@@ -141,8 +141,8 @@ namespace Rinkudesu.Services.Links.Repositories.QueryModels
                     ? links.OrderByDescending(l => l.Title)
                     : links.OrderBy(l => l.Title),
                 LinkListSortOptions.Url => SortDescending
-                    ? links.OrderByDescending(l => l.LinkUrl)
-                    : links.OrderBy(l => l.LinkUrl),
+                    ? links.OrderByDescending(l => l.SearchableUrl)
+                    : links.OrderBy(l => l.SearchableUrl),
                 LinkListSortOptions.CreationDate => SortDescending
                     ? links.OrderByDescending(l => l.CreationDate)
                     : links.OrderBy(l => l.CreationDate),
