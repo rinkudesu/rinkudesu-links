@@ -161,17 +161,16 @@ namespace Rinkudesu.Services.Links.Controllers.V1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Update(Guid linkId, [FromBody] LinkDto updatedLink)
+        public async Task<ActionResult> Update(Guid linkId, [FromBody] LinkEditDto updatedLink)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             using var scope =
                 _logger.BeginScope("Updating a link with id {linkId} with {newLink}", linkId, updatedLink);
             var link = _mapper.Map<Link>(updatedLink);
             link.Id = linkId;
             link.CreatingUserId = User.GetIdAsGuid();
-            if (!TryValidateModel(link))
-            {
-                return BadRequest();
-            }
             try
             {
                 await _repository.UpdateLinkAsync(link, User.GetIdAsGuid()).ConfigureAwait(false);

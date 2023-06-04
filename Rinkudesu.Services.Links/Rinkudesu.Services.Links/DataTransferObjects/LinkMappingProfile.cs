@@ -13,6 +13,7 @@ namespace Rinkudesu.Services.Links.DataTransferObjects
         {
             CreateMap<Link, LinkDto>();
             CreateMap<LinkCreateDto, Link>();
+            CreateMap<LinkEditDto, Link>();
         }
     }
 }
