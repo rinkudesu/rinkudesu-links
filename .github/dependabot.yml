@@ -8,10 +8,10 @@ updates:
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Rinkudesu.Services.Links" # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: "monthly"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       # Check for updates to GitHub Actions every weekday
-      interval: "daily"
+      interval: "monthly"
